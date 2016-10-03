@@ -1,5 +1,7 @@
 package bubblebobble;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -16,11 +18,14 @@ public class BubbleBobbleGame extends StateBasedGame
 	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
+	public static final String LEVEL_1_SINGLE_TILE = "resource/Level_1_Single_Tile.png";
+	public static final String LEVEL_1_4x4_TILE = "resource/Level_1_4x4_Tile.png";
 		
-	private final int ScreenWidth;
-	private final int ScreenHeight;
+	final int ScreenWidth;
+	final int ScreenHeight;
 	
 	Bub bub;
+	ArrayList<Bricks> brick;
 
 	public BubbleBobbleGame(String title, int width, int height) {
 		super(title);
@@ -28,6 +33,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		ScreenWidth = width;
 		
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
+		
+		brick = new ArrayList<Bricks>(200);
 	}
 	
 	@Override
@@ -35,6 +42,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		addState(new PlayingState());
 		
 		ResourceManager.loadImage(BUB_STANDING);
+		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
+		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
 		
 		bub = new Bub(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
 	}
@@ -44,8 +53,8 @@ public class BubbleBobbleGame extends StateBasedGame
 	{
 		 AppGameContainer app;
 		 try {
-			 app = new AppGameContainer(new BubbleBobbleGame("Bubble Bobble", 256, 254));
-			 app.setDisplayMode(256, 254, false);
+			 app = new AppGameContainer(new BubbleBobbleGame("Bubble Bobble", 768, 672));
+			 app.setDisplayMode(768, 672, false);
 			 app.setVSync(true);
 			 app.start();
 		 } catch (SlickException e) {

@@ -2,13 +2,13 @@
 
 - **[1]** Need a skeletal, executable game.
 - **[2]** Render main character Bub.
+- **[3]** Use fully specified resource path, preload resources and add PlayingState.
+- **[4]** Render level 1 map.
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[3]** Use fully specified resource path, preload resources and add PlayingState.
-- **[4]** Render map.
-- **[5]** Add in vertical and horizontal movement including jumping with gravity.
+- **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity).
 - **[6]** Add collision detection between Bub and the map.
 - **[7]** Add StartUp and GameOver states.
 - **[8]** Use a proper Slick StateBasedGame.
