@@ -6,21 +6,34 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import jig.Entity;
+
 public class BubbleBobbleGame extends BasicGame
 {
+	private final int ScreenWidth;
+	private final int ScreenHeight;
+	
+	Bub bub;
 
 	public BubbleBobbleGame(String title, int width, int height) {
 		super(title);
+		ScreenHeight = height;
+		ScreenWidth = width;
+		
+		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 	}
 	
 	@Override
-	 public void render(GameContainer arg0, Graphics arg1) throws SlickException {
-	 // TODO Auto-generated method stub
-	 }
-	 @Override
-	 public void init(GameContainer arg0) throws SlickException {
-	 // TODO Auto-generated method stub
-	 }
+	public void render(GameContainer container, Graphics g)
+			 throws SlickException {
+			 bub.render(g);
+	}
+	
+	@Override
+	public void init(GameContainer container) throws SlickException {
+		bub = new Bub(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+	}
+
 	 @Override
 	 public void update(GameContainer arg0, int arg1) throws SlickException {
 	 // TODO Auto-generated method stub
