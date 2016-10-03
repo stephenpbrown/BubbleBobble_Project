@@ -45,7 +45,7 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
 		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
 		
-		bub = new Bub(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+		bub = new Bub(ScreenWidth / 4, ScreenHeight / 4);
 	}
 
 	 

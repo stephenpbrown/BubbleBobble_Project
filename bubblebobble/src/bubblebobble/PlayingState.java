@@ -10,9 +10,14 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import jig.ResourceManager;
+import jig.Vector;
 
 public class PlayingState extends BasicGameState {
 
+	boolean onPlatform = false;
+	float gravity = 0;
+	int time = 0;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -100,6 +105,56 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
+		if(onPlatform == false)
+			gravity = 0.1f;
+		for (Bricks b : bbg.brick)
+		{
+			if (bbg.bub.collides(b) != null)
+			{
+				gravity = 0;
+				onPlatform = true;
+				System.out.println("Touching platform! gravity = " + gravity);
+			}
+			else
+			{
+				onPlatform = false;
+			}
+		}
+		
+		float xVelocity = bbg.bub.getVelocity().getX();
+		bbg.bub.setVelocity(new Vector(xVelocity, gravity));
+		
+		System.out.println("Velocity = " + bbg.bub.getVelocity());	
+		
+		float yVelocity = bbg.bub.getVelocity().getY();
+		// Move the paddle left
+		if (input.isKeyDown(Input.KEY_LEFT) && bbg.bub.getCoarseGrainedMinX() > 48) 
+		{
+			bbg.bub.setVelocity(new Vector(-0.25f, yVelocity));
+		}
+		// Move the paddle right
+		else if (input.isKeyDown(Input.KEY_RIGHT) && bbg.bub.getCoarseGrainedMaxX() < bbg.ScreenWidth - 48) 
+		{
+			bbg.bub.setVelocity(new Vector(0.25f, yVelocity));
+		}
+		else if (input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL) && onPlatform == true)
+		{
+			bbg.bub.setVelocity(new Vector(xVelocity, -0.1f));
+		}
+		else
+		{
+			bbg.bub.setVelocity(new Vector(0,yVelocity));
+		}	
+		
+//		if (onPlatform == false)
+//		{
+//			float xVelocity = bbg.bub.getVelocity().getX();
+//			bbg.bub.setVelocity(new Vector(xVelocity, 0.1f));
+//		}
+//		float yVelocity = gravity;
+//		float xVelocity = bbg.bub.getVelocity().getX();
+		//System.out.println("yVelocity = " + yVelocity);
+		bbg.bub.update(delta);
 	}
 	 
 	@Override

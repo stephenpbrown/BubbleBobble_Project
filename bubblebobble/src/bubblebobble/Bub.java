@@ -8,11 +8,11 @@ public class Bub extends Entity
 {
 	private Vector velocity;
 	
-	public Bub(final float x, final float y, final float vx, final float vy) {
+	public Bub(final float x, final float y) {
 		super(x, y);
 		addImageWithBoundingBox(ResourceManager
 				.getImage(BubbleBobbleGame.BUB_STANDING));
-		velocity = new Vector(vx, vy);
+		velocity = new Vector(0, 0);
 	 }
 
 	public void setVelocity(final Vector v) {
