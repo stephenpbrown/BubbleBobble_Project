@@ -11,7 +11,7 @@ public class Bub extends Entity
 	public Bub(final float x, final float y, final float vx, final float vy) {
 		super(x, y);
 		addImageWithBoundingBox(ResourceManager
-				.getImage("resource/Bub_Standing.png"));
+				.getImage(BubbleBobbleGame.BUB_STANDING));
 		velocity = new Vector(vx, vy);
 	 }
 

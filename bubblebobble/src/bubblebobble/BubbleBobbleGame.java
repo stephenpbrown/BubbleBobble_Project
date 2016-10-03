@@ -5,11 +5,18 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
 import jig.Entity;
+import jig.ResourceManager;
 
-public class BubbleBobbleGame extends BasicGame
+public class BubbleBobbleGame extends StateBasedGame
 {
+	public static final int PLAYINGSTATE = 0;
+	
+	// Sprites
+	public static final String BUB_STANDING = "resource/Bub_Standing.png";
+		
 	private final int ScreenWidth;
 	private final int ScreenHeight;
 	
@@ -24,28 +31,22 @@ public class BubbleBobbleGame extends BasicGame
 	}
 	
 	@Override
-	public void render(GameContainer container, Graphics g)
-			 throws SlickException {
-			 bub.render(g);
-	}
-	
-	@Override
-	public void init(GameContainer container) throws SlickException {
+	public void initStatesList(GameContainer container) throws SlickException {
+		addState(new PlayingState());
+		
+		ResourceManager.loadImage(BUB_STANDING);
+		
 		bub = new Bub(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
 	}
-
-	 @Override
-	 public void update(GameContainer arg0, int arg1) throws SlickException {
-	 // TODO Auto-generated method stub
-	 }
 
 	 
 	public static void main(String[] args) 
 	{
 		 AppGameContainer app;
 		 try {
-			 app = new AppGameContainer(new BubbleBobbleGame("Bubble Bobble", 800, 600));
-			 app.setDisplayMode(800, 600, false);
+			 app = new AppGameContainer(new BubbleBobbleGame("Bubble Bobble", 256, 254));
+			 app.setDisplayMode(256, 254, false);
+			 app.setVSync(true);
 			 app.start();
 		 } catch (SlickException e) {
 			 e.printStackTrace();

@@ -1,11 +1,11 @@
 ## Resolved Issues ##
 
 - **[1]** Need a skeletal, executable game.
+- **[2]** Render main character Bub.
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[2]** Render main character Bub.
 - **[3]** Use fully specified resource path, preload resources and add PlayingState.
 - **[4]** Render map.
 - **[5]** Add in vertical and horizontal movement including jumping with gravity.
