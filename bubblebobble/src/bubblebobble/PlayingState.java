@@ -1,7 +1,11 @@
 package bubblebobble;
 
+import java.awt.Toolkit;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -16,8 +20,30 @@ public class PlayingState extends BasicGameState {
 
 	boolean onPlatform = false;
 	float gravity = 0;
+	boolean jumping = false;
+	float jumpDistance = 0;
 	int time = 0;
+	float overlap = 0;
+	private Animation walking;
 	
+	Toolkit toolkit;
+	Timer timer;
+
+	public void ReminderBeep(int seconds) {
+		toolkit = Toolkit.getDefaultToolkit();
+		timer = new Timer();
+		timer.schedule(new RemindTask(), seconds * 1000);
+	}
+
+	class RemindTask extends TimerTask {
+		public void run() {
+			System.out.println("Time's up!");
+			toolkit.beep();
+			//timer.cancel(); //Not necessary because we call System.exit
+			System.exit(0); //Stops the AWT thread (and everything else)
+		}
+	}
+	  
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -100,20 +126,42 @@ public class PlayingState extends BasicGameState {
 		
 	}
 	
+//	public void jump()
+//	{
+//		if(gameTime.getTimeMS() - jumpTime > jumpDelayInMilliseconds) {
+//		       jumpTime = gameTime.getTimeMS();
+//		       character.jump();
+//	}
+	
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
-		if(onPlatform == false)
-			gravity = 0.1f;
+		if(onPlatform == false 
+			&& jumping == false
+			//&& bbg.bub.getCoarseGrainedMaxY() > jumpDistance
+			&& bbg.bub.getCoarseGrainedMaxY() < bbg.ScreenHeight 
+			&& bbg.bub.getCoarseGrainedMinX() > 48)
+		{
+			jumpDistance = 0;
+			gravity = 0.15f;
+		}
+		
 		for (Bricks b : bbg.brick)
 		{
-			if (bbg.bub.collides(b) != null)
+			if (bbg.bub.collides(b) != null 
+				&& bbg.bub.getCoarseGrainedMaxY() < b.getCoarseGrainedMinY()+5
+				&& bbg.bub.getCoarseGrainedMinX() > 48)
+//				&& bbg.bub.getCoarseGrainedMaxX() < bbg.ScreenWidth - 48)
 			{
 				gravity = 0;
 				onPlatform = true;
-				System.out.println("Touching platform! gravity = " + gravity);
+				jumping = false;
+				overlap = Math.abs(b.getCoarseGrainedMinY() - bbg.bub.getCoarseGrainedMaxY()) - 1;
+				bbg.bub.setPosition(bbg.bub.getX(), bbg.bub.getY() - overlap);
+				//System.out.println(overlap);
+				//System.out.println("Touching platform! gravity = " + gravity);
 			}
 			else
 			{
@@ -121,31 +169,57 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 		
-		float xVelocity = bbg.bub.getVelocity().getX();
-		bbg.bub.setVelocity(new Vector(xVelocity, gravity));
-		
-		System.out.println("Velocity = " + bbg.bub.getVelocity());	
+		//System.out.println("x = " + bbg.bub.getCoarseGrainedMinX());
+		//System.out.println("Velocity = " + bbg.bub.getVelocity());	
 		
 		float yVelocity = bbg.bub.getVelocity().getY();
 		// Move the paddle left
-		if (input.isKeyDown(Input.KEY_LEFT) && bbg.bub.getCoarseGrainedMinX() > 48) 
+		if (input.isKeyDown(Input.KEY_LEFT) 
+			&& bbg.bub.getCoarseGrainedMinX() > 48
+			&& bbg.bub.getCoarseGrainedMaxY() < bbg.ScreenHeight)
 		{
-			bbg.bub.setVelocity(new Vector(-0.25f, yVelocity));
+			bbg.bub.setVelocity(new Vector(-0.2f, yVelocity));
+//			bbg.bub.removeImage(ResourceManager.getImage(bbg.BUB_STANDING));
+//			walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_WALKING, 42, 42), 
+//					0, 0, 7, 0, true, 100, true);
+//			bbg.bub.addAnimation(walking);
+			if (input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL) && onPlatform == true)
+			{
+				jumping = true;
+				onPlatform = false;
+				jumpDistance = bbg.bub.getCoarseGrainedMaxY() - 48;
+				gravity = -0.15f;
+				//bbg.bub.setVelocity(new Vector(xVelocity, -0.1f));
+			}
 		}
 		// Move the paddle right
 		else if (input.isKeyDown(Input.KEY_RIGHT) && bbg.bub.getCoarseGrainedMaxX() < bbg.ScreenWidth - 48) 
 		{
-			bbg.bub.setVelocity(new Vector(0.25f, yVelocity));
+			bbg.bub.setVelocity(new Vector(0.2f, yVelocity));
+			
+			if (input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL) && onPlatform == true)
+			{
+				jumping = true;
+				onPlatform = false;
+				jumpDistance = bbg.bub.getCoarseGrainedMaxY() - 48;
+				gravity = -0.15f;
+				//bbg.bub.setVelocity(new Vector(xVelocity, -0.1f));
+			}
 		}
-		else if (input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL) && onPlatform == true)
+		else if (input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL) && onPlatform == true)
 		{
-			bbg.bub.setVelocity(new Vector(xVelocity, -0.1f));
+			jumping = true;
+			onPlatform = false;
+			jumpDistance = bbg.bub.getCoarseGrainedMaxY() - 48;
+			gravity = -0.15f;
+			//bbg.bub.setVelocity(new Vector(xVelocity, -0.1f));
 		}
 		else
 		{
 			bbg.bub.setVelocity(new Vector(0,yVelocity));
-		}	
-		
+		}
+		float xVelocity = bbg.bub.getVelocity().getX();
+		bbg.bub.setVelocity(new Vector(xVelocity, gravity));
 //		if (onPlatform == false)
 //		{
 //			float xVelocity = bbg.bub.getVelocity().getX();

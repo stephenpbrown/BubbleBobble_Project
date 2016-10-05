@@ -18,6 +18,7 @@ public class BubbleBobbleGame extends StateBasedGame
 	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
+	public static final String BUB_WALKING = "resource/Bub_Walking.png";
 	public static final String LEVEL_1_SINGLE_TILE = "resource/Level_1_Single_Tile.png";
 	public static final String LEVEL_1_4x4_TILE = "resource/Level_1_4x4_Tile.png";
 		
@@ -42,6 +43,7 @@ public class BubbleBobbleGame extends StateBasedGame
 		addState(new PlayingState());
 		
 		ResourceManager.loadImage(BUB_STANDING);
+		ResourceManager.loadImage(BUB_WALKING);
 		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
 		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
 		
