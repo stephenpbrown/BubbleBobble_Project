@@ -18,7 +18,14 @@ public class BubbleBobbleGame extends StateBasedGame
 	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
-	public static final String BUB_WALKING = "resource/Bub_Walking.png";
+	public static final String BUB_STANDING_LEFT = "resource/Bub_Standing_Left.png";
+	public static final String BUB_STANDING_RIGHT = "resource/Bub_Standing_Right.png";
+	public static final String BUB_WALKING_LEFT = "resource/Bub_Walking_Left.png";
+	public static final String BUB_WALKING_RIGHT = "resource/Bub_Walking_Right.png";
+	public static final String BUB_FALLING_LEFT = "resource/Bub_Falling_Left.png";
+	public static final String BUB_FALLING_RIGHT = "resource/Bub_Falling_Right.png";
+	public static final String BUB_JUMPING_LEFT = "resource/Bub_Jumping_Left.png";
+	public static final String BUB_JUMPING_RIGHT = "resource/Bub_Jumping_Right.png";
 	public static final String LEVEL_1_SINGLE_TILE = "resource/Level_1_Single_Tile.png";
 	public static final String LEVEL_1_4x4_TILE = "resource/Level_1_4x4_Tile.png";
 		
@@ -43,7 +50,14 @@ public class BubbleBobbleGame extends StateBasedGame
 		addState(new PlayingState());
 		
 		ResourceManager.loadImage(BUB_STANDING);
-		ResourceManager.loadImage(BUB_WALKING);
+		ResourceManager.loadImage(BUB_STANDING_RIGHT);
+		ResourceManager.loadImage(BUB_STANDING_LEFT);
+		ResourceManager.loadImage(BUB_WALKING_RIGHT);
+		ResourceManager.loadImage(BUB_WALKING_LEFT);
+		ResourceManager.loadImage(BUB_FALLING_RIGHT);
+		ResourceManager.loadImage(BUB_FALLING_LEFT);
+		ResourceManager.loadImage(BUB_JUMPING_RIGHT);
+		ResourceManager.loadImage(BUB_JUMPING_LEFT);
 		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
 		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
 		

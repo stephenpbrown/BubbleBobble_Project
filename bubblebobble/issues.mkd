@@ -4,26 +4,24 @@
 - **[2]** Render main character Bub.
 - **[3]** Use fully specified resource path, preload resources and add PlayingState.
 - **[4]** Render level 1 map.
+- **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity and map collision).
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity and map collision).
-- **[6]** Add StartUp and GameOver states.
-- **[7]** Use a proper Slick StateBasedGame.
-- **[8]** Render in enemies and add reasonable pathfinding for them using Dijkstra's algorithm.
-- **[9]** Add in collision detection between the main character and enemies.
-- **[10]** Allow the main character to attack enemies and destroy them with bubbles.
-- **[11]** Add in enemy state-based changes.
-- **[12]** Add in level timer (player needs to finish level before the time ends).
-- **[13]** Add in lives remaining and make lives reduce when player is hit by an enemy.
-- **[14]** Add in a scoring system.
-- **[15]** Add in level 2.
-- **[16]** Add in GameWon state and Splash Screen.
+- **[6]** Render in enemies and add reasonable pathfinding for them using Dijkstra's algorithm.
+- **[7]** Add in collision detection between the main character and enemies.
+- **[8]** Allow the main character to attack enemies and destroy them with bubbles.
+- **[9]** Add in enemy state-based changes.
+- **[10]** Add in level timer (player needs to finish level before the time ends).
+- **[11]** Add in lives remaining and make lives reduce when player is hit by an enemy.
+- **[12]** Add in a scoring system.
+- **[13]** Add in level 2.
+- **[14]** Add in GameWon state and Splash Screen.
 
 *High-Bar Issues*
-- **[17]** Add items that give extra points when collected.
-- **[18]** Add in invincible enemy when the level timer reaches zero.
-- **[19]** Add intelligent pathfinding for enemies.
-- **[20]** Add special element bubbles that attack enemies with fire, lightning or water when popped.
-- **[21]** Add in player state-based changes (power ups and special abilities).
+- **[15]** Add items that give extra points when collected.
+- **[16]** Add in invincible enemy when the level timer reaches zero.
+- **[17]** Add intelligent pathfinding for enemies.
+- **[18]** Add special element bubbles that attack enemies with fire, lightning or water when popped.
+- **[19]** Add in player state-based changes (power ups and special abilities).

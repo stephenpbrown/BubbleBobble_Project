@@ -1,5 +1,7 @@
 package bubblebobble;
 
+import org.newdawn.slick.Animation;
+
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
@@ -7,14 +9,36 @@ import jig.Vector;
 public class Bub extends Entity
 {
 	private Vector velocity;
+	private Animation standing;
 	
 	public Bub(final float x, final float y) {
 		super(x, y);
 		addImageWithBoundingBox(ResourceManager
 				.getImage(BubbleBobbleGame.BUB_STANDING));
+		removeImage(ResourceManager.getImage(BubbleBobbleGame.BUB_STANDING));
+		//Animate();
 		velocity = new Vector(0, 0);
 	 }
 
+	public void removeAnimation()
+	{
+		removeAnimation(standing);
+	}
+	
+	public void AnimateRight()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.BUB_STANDING_RIGHT, 45, 40), 
+				0, 0, 1, 0, true, 300, true);
+		addAnimation(standing);
+	}
+	
+	public void AnimateLeft()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.BUB_STANDING_LEFT, 45, 40), 
+				0, 0, 1, 0, true, 300, true);
+		addAnimation(standing);
+	}
+	
 	public void setVelocity(final Vector v) {
 		velocity = v;
 	}
@@ -24,6 +48,7 @@ public class Bub extends Entity
 	}
 	
 	public void update(final int delta) {
+//		System.out.println("updating");
 		translate(velocity.scale(delta));
 	}
 }
