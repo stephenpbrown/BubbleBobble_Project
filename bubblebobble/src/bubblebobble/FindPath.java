@@ -97,7 +97,7 @@ public class FindPath
 		if(n.equals(player) && foundPlayer == false)
 		{
 			foundPlayer = true;
-			System.out.println("Found player"); // DEBUG
+//			System.out.println("Found player"); // DEBUG
 			CreatePath(n);
 			return;
 		}
@@ -196,7 +196,7 @@ public class FindPath
 		
 		refNode = sn;
 		
-		System.out.println("**CHECKING LIST**");
+//		System.out.println("**CHECKING LIST**");
 		
 		Search(sn, en);
 		
@@ -209,20 +209,20 @@ public class FindPath
 //		}
 		
 //		System.out.println(open.get(65).getWalkLeft());
-		System.out.println("playerNode = " + playerNode + ", enemyNode = " + enemyNode);
-		System.out.println("Nodes checked: " + nodesChecked/2);
+//		System.out.println("playerNode = " + playerNode + ", enemyNode = " + enemyNode);
+//		System.out.println("Nodes checked: " + nodesChecked/2);
 
 //		System.out.println(instructions);
 		
-		if (!instructions.isEmpty())
-		{
-//			for (String s : instructions)
-//			{
-//				System.out.println(s);
-//			}
-		}
-		else
-			System.out.println("Player not found");
+//		if (!instructions.isEmpty())
+//		{
+////			for (String s : instructions)
+////			{
+////				System.out.println(s);
+////			}
+//		}
+//		else
+//			System.out.println("Player not found");
 		
 		return instructions;
 	}
