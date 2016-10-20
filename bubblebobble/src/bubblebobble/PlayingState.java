@@ -44,7 +44,7 @@ public class PlayingState extends BasicGameState {
 	private boolean standStill = false;
 	private boolean idle = false;
 	private boolean fastFall = false;
-	private boolean showEdges = true;
+	private boolean showEdges = false;
 	private boolean pause = false;
 	private boolean findPath = true;
 	private boolean enemyJumpingSide = false;
@@ -64,6 +64,8 @@ public class PlayingState extends BasicGameState {
 	float positionX = 0;
 	float positionY = 0;
 	float bottomToMiddle = 0;
+	private int livesRemaining;
+	private int playerHitTimeout = 0;
 
 	private List<Node> node;
 	private List<String> instructions;
@@ -100,6 +102,7 @@ public class PlayingState extends BasicGameState {
 		instructions = new ArrayList<String>();
 		collidingWithBlocks = new ArrayList<Blocks>();
 		collidingWithBlocksP = new ArrayList<Blocks>();
+		livesRemaining = 3;
 		mapGrid = new char[24][28]; // 0-23 width, 0-27 height
 		
 //		for(int i = 0; i < 2; i++)
@@ -212,6 +215,8 @@ public class PlayingState extends BasicGameState {
 		
 		bbg.bub.render(g);
 		
+		g.drawString("" + livesRemaining, 30, bbg.ScreenHeight-22);
+		
 		for(Enemy e : bbg.enemy)
 		{
 	//		if(findPath == true)
@@ -254,10 +259,10 @@ public class PlayingState extends BasicGameState {
 				e.setInstructions(instructions);
 				e.setPath(createPath.getNodePath());
 				
-				for (int i = instructions.size()-1; i >=0; i--)
-				{
-					System.out.println(instructions.get(i) + " on node " + createPath.getNodePath().get(i) + " which is block " + createPath.getNodePath().get(i).getRefBlock());
-				}
+//				for (int i = instructions.size()-1; i >=0; i--)
+//				{
+//					System.out.println(instructions.get(i) + " on node " + createPath.getNodePath().get(i) + " which is block " + createPath.getNodePath().get(i).getRefBlock());
+//				}
 	//	    	Node n = nodeL.get(5).getWalkRight();
 	//	    	System.out.println(n.getWalkLeft() + ", " + n.getWalkRight() + ", " + n.getJumpLeft() + ", " + n.getJumpRight() + ", " + n.getJumpUp());
 			}
@@ -883,7 +888,7 @@ public class PlayingState extends BasicGameState {
 							&& e.getCurrentLocation().getX() >= path.get(i+1).getX()+1
 							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
 					{
-						e.setPosition(e.getX()-7, e.getY());
+						e.setPosition(e.getX()+7, e.getY());
 						
 						e.setOnPlatform(false);
 						e.setFalling(true);
@@ -905,14 +910,9 @@ public class PlayingState extends BasicGameState {
 		}
 	}
 	
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		Input input = container.getInput();
+	public void EnemyCollisionDetection(StateBasedGame game)
+	{
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
-		
-		PlayerCollisionDetection(bbg); // Detect player collisions
-		
-//		count++;
 		
 		for (Blocks b : bbg.block)
 		{
@@ -948,7 +948,8 @@ public class PlayingState extends BasicGameState {
 						e.setPosition(68, e.getY());
 //						e.setCurrentLocation(new Vector(node.get(0).getX(), node.get(0).getY()));
 //						e.setVelocity(new Vector(0.15f, 0));
-						e.setXVelocity(0);
+						if(e.getOnPlatform())
+							e.setXVelocity(0.1f);
 						e.setYVelocity(0.15f);
 //						enemyVelocityX = 0;
 //						enemyVelocityY = 0.15f;
@@ -957,7 +958,8 @@ public class PlayingState extends BasicGameState {
 					{
 						e.setPosition(bbg.ScreenWidth - 68, e.getY());
 //						e.setCurrentLocation(b.getPosition());
-						e.setXVelocity(0);
+						if(e.getOnPlatform())
+							e.setXVelocity(-0.1f);
 						e.setYVelocity(0.15f);
 //						enemyVelocityX = 0;
 //						enemyVelocityY = 0.15f;
@@ -1000,6 +1002,31 @@ public class PlayingState extends BasicGameState {
 //			collidingWithBlocks.remove(0);
 //			collidingWithBlocks.remove(1);
 		}
+	}
+	
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		Input input = container.getInput();
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
+		
+		PlayerCollisionDetection(bbg); // Detect player collisions		
+		EnemyCollisionDetection(bbg); // Detect enemy collisions
+		
+		if(playerHitTimeout == 0)
+		{
+			for(Enemy e : bbg.enemy)
+			{
+				if(e.collides(bbg.bub) != null)
+				{
+					System.out.println("Gotcha!");
+					livesRemaining--; // KEEP GOING HERE
+					playerHitTimeout = 180;
+					break;
+				}
+			}
+		}
+		else
+			playerHitTimeout--;
 		
 		if(input.isKeyPressed(Input.KEY_P))
 		{
