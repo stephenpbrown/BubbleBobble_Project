@@ -6,22 +6,21 @@
 - **[4]** Render level 1 map.
 - **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity and map collision).
 - **[6]** Render in enemies and add reasonable pathfinding for them.
+- **[7]** Add in collision detection between the main character and enemies and reduce lives remaining counter.
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[7]** Add in collision detection between the main character and enemies.
 - **[8]** Allow the main character to attack enemies and destroy them with bubbles.
 - **[9]** Add in enemy state-based changes.
 - **[10]** Add in level timer (player needs to finish level before the time ends).
-- **[11]** Add in lives remaining and make lives reduce when player is hit by an enemy.
-- **[12]** Add in a scoring system.
-- **[13]** Add in level 2.
-- **[14]** Add in GameWon state and Splash Screen.
+- **[11]** Add in a scoring system.
+- **[12]** Add in level 2.
+- **[13]** Add in GameWon state and Splash Screen.
 
 *High-Bar Issues*
-- **[15]** Add items that give extra points when collected.
-- **[16]** Add in invincible enemy when the level timer reaches zero.
-- **[17]** Add intelligent pathfinding for enemies.
-- **[18]** Add special element bubbles that attack enemies with fire, lightning or water when popped.
-- **[19]** Add in player state-based changes (power ups and special abilities).
+- **[14]** Add items that give extra points when collected.
+- **[15]** Add in invincible enemy when the level timer reaches zero.
+- **[16]** Add intelligent pathfinding for enemies.
+- **[17]** Add special element bubbles that attack enemies with fire, lightning or water when popped.
+- **[18]** Add in player state-based changes (power ups and special abilities).
