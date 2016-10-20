@@ -4,13 +4,13 @@ import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 
-public class Bricks extends Entity
+public class Blocks extends Entity
 {
 
 	private Vector velocity;
 	private int level = 1;
 	
-	public Bricks(final float x, final float y, final int l, final int size) {
+	public Blocks(final float x, final float y, final int l, final int size) {
 		super(x, y);
 		level = l;
 		
