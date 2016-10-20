@@ -10,6 +10,7 @@ public class Bub extends Entity
 {
 	private Vector velocity;
 	private Animation standing;
+	private Vector currentLocation;
 	
 	public Bub(final float x, final float y) {
 		super(x, y);
@@ -50,5 +51,15 @@ public class Bub extends Entity
 	public void update(final int delta) {
 //		System.out.println("updating");
 		translate(velocity.scale(delta));
+	}
+	
+	public void setCurrentLocation(Vector currentLocation)
+	{
+		this.currentLocation = currentLocation;
+	}
+	
+	public Vector getCurrentLocation()
+	{
+		return this.currentLocation;
 	}
 }

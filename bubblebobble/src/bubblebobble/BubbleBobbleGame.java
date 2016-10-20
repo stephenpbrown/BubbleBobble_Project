@@ -22,6 +22,8 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final String BUB_STANDING_RIGHT = "resource/Bub_Standing_Right.png";
 	public static final String BUB_WALKING_LEFT = "resource/Bub_Walking_Left.png";
 	public static final String BUB_WALKING_RIGHT = "resource/Bub_Walking_Right.png";
+	public static final String LEVEL_1_ENEMY_WALKING_LEFT = "resource/Level_1_Enemy_Walking_Left2.png";
+	public static final String LEVEL_1_ENEMY_WALKING_RIGHT = "resource/Level_1_Enemy_Walking_Right2.png";
 	public static final String BUB_FALLING_LEFT = "resource/Bub_Falling_Left.png";
 	public static final String BUB_FALLING_RIGHT = "resource/Bub_Falling_Right.png";
 	public static final String BUB_JUMPING_LEFT = "resource/Bub_Jumping_Left.png";
@@ -33,7 +35,8 @@ public class BubbleBobbleGame extends StateBasedGame
 	final int ScreenHeight;
 	
 	Bub bub;
-	ArrayList<Bricks> brick;
+	ArrayList<Blocks> block;
+	ArrayList<Enemy> enemy;
 
 	public BubbleBobbleGame(String title, int width, int height) {
 		super(title);
@@ -42,7 +45,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 		
-		brick = new ArrayList<Bricks>(200);
+		block = new ArrayList<Blocks>(200);
+		enemy = new ArrayList<Enemy>(6);
 	}
 	
 	@Override
@@ -54,6 +58,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadImage(BUB_STANDING_LEFT);
 		ResourceManager.loadImage(BUB_WALKING_RIGHT);
 		ResourceManager.loadImage(BUB_WALKING_LEFT);
+		ResourceManager.loadImage(LEVEL_1_ENEMY_WALKING_RIGHT);
+		ResourceManager.loadImage(LEVEL_1_ENEMY_WALKING_LEFT);
 		ResourceManager.loadImage(BUB_FALLING_RIGHT);
 		ResourceManager.loadImage(BUB_FALLING_LEFT);
 		ResourceManager.loadImage(BUB_JUMPING_RIGHT);
@@ -61,7 +67,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
 		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
 		
-		bub = new Bub(ScreenWidth / 4, ScreenHeight / 4);
+		bub = new Bub(ScreenWidth / 2, 2*ScreenHeight/3+60);
+		
 	}
 
 	 
