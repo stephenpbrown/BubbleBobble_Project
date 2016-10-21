@@ -17,6 +17,9 @@ public class Enemy extends Entity {
 	private boolean jumping;
 	private boolean falling;
 	private boolean onPlatform;
+	private boolean inBubble;
+	private boolean enemyDying;
+	private boolean removeEnemy;
 	private float xVelocity;
 	private float yVelocity;
 	private float bottomToMiddle;
@@ -25,6 +28,7 @@ public class Enemy extends Entity {
 	private List<Blocks> collidingWithBlocks;
 	private Blocks lastBlock;
 	private int ID;
+	private int timeInBubble;
 	
 	public Enemy(final float x, final float y, int ID) {
 		super(x, y);
@@ -61,8 +65,66 @@ public class Enemy extends Entity {
 		addAnimation(standing);
 	}
 	
+	public void AnimateInBubble()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.ENEMY_IN_BUBBLE, 40, 40), 
+				0, 0, 2, 0, true, 300, true);
+		addAnimation(standing);
+		inBubble = true;
+	}
+	
+	public void AnimateEnemyDying()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.ENEMY_DYING, 30, 35), 
+				0, 0, 3, 0, true, 200, true);
+		addAnimation(standing);
+		enemyDying = true;
+	}
+	
+	public boolean getEnemyDying()
+	{
+		return this.enemyDying;
+	}
+	
+	public void setEnemyDying(boolean enemyDying)
+	{
+		this.enemyDying = enemyDying;
+	}
+	
+	public boolean getRemoveEnemy()
+	{
+		return this.removeEnemy;
+	}
+	
+	public void setRemoveEnemy(boolean removeEnemy)
+	{
+		this.removeEnemy = removeEnemy;
+	}
+	
+	public void setInBubble(boolean inBubble)
+	{
+		this.inBubble = inBubble;
+	}
+	
+	public boolean getInBubble()
+	{
+		return this.inBubble;
+	}
+	
+	public void setTimeInBubble(int timeInBubble) {
+		this.timeInBubble = timeInBubble;
+	}
+	
+	public int getTimeInBubble() {
+		return this.timeInBubble;
+	}
+	
+	public void decTimeInBubble() {
+		this.timeInBubble--;
+	}
+	
 	public void setVelocity(final Vector v) {
-		velocity = v;
+		this.velocity = v;
 	}
 	
 	public Vector getVelocity() {

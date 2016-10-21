@@ -22,6 +22,13 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final String BUB_STANDING_RIGHT = "resource/Bub_Standing_Right.png";
 	public static final String BUB_WALKING_LEFT = "resource/Bub_Walking_Left.png";
 	public static final String BUB_WALKING_RIGHT = "resource/Bub_Walking_Right.png";
+	public static final String BUB_BLOWING_BUBBLE_LEFT = "resource/Bub_Blowing_Bubble_Left2.png";
+	public static final String BUB_BLOWING_BUBBLE_RIGHT = "resource/Bub_Blowing_Bubble_Right2.png";
+	public static final String BUB_DYING = "resource/Bub_Dying2.png";
+	public static final String ENEMY_IN_BUBBLE = "resource/Enemy_In_Bubble2.png";
+	public static final String ENEMY_DYING = "resource/Enemy_Dying2.png";
+	public static final String BUBBLE_SPRITE = "resource/Bubble_Sprite2.png";
+	public static final String BUBBLE = "resource/Bubble2.png";
 	public static final String LEVEL_1_ENEMY_WALKING_LEFT = "resource/Level_1_Enemy_Walking_Left2.png";
 	public static final String LEVEL_1_ENEMY_WALKING_RIGHT = "resource/Level_1_Enemy_Walking_Right2.png";
 	public static final String BUB_FALLING_LEFT = "resource/Bub_Falling_Left.png";
@@ -37,6 +44,7 @@ public class BubbleBobbleGame extends StateBasedGame
 	Bub bub;
 	ArrayList<Blocks> block;
 	ArrayList<Enemy> enemy;
+	ArrayList<Bubble> bubble;
 
 	public BubbleBobbleGame(String title, int width, int height) {
 		super(title);
@@ -47,6 +55,7 @@ public class BubbleBobbleGame extends StateBasedGame
 		
 		block = new ArrayList<Blocks>(200);
 		enemy = new ArrayList<Enemy>(6);
+		bubble = new ArrayList<Bubble>();
 	}
 	
 	@Override
@@ -58,6 +67,13 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadImage(BUB_STANDING_LEFT);
 		ResourceManager.loadImage(BUB_WALKING_RIGHT);
 		ResourceManager.loadImage(BUB_WALKING_LEFT);
+		ResourceManager.loadImage(BUB_BLOWING_BUBBLE_RIGHT);
+		ResourceManager.loadImage(BUB_BLOWING_BUBBLE_LEFT);
+		ResourceManager.loadImage(BUB_DYING);
+		ResourceManager.loadImage(BUBBLE_SPRITE);
+		ResourceManager.loadImage(BUBBLE);
+		ResourceManager.loadImage(ENEMY_IN_BUBBLE);
+		ResourceManager.loadImage(ENEMY_DYING);
 		ResourceManager.loadImage(LEVEL_1_ENEMY_WALKING_RIGHT);
 		ResourceManager.loadImage(LEVEL_1_ENEMY_WALKING_LEFT);
 		ResourceManager.loadImage(BUB_FALLING_RIGHT);

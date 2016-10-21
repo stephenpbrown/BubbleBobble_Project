@@ -7,11 +7,11 @@
 - **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity and map collision).
 - **[6]** Render in enemies and add reasonable pathfinding for them.
 - **[7]** Add in collision detection between the main character and enemies and reduce lives remaining counter.
+- **[8]** Allow the main character to attack enemies and destroy them with bubbles and allow enemies to hurt Bub.
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[8]** Allow the main character to attack enemies and destroy them with bubbles.
 - **[9]** Add in enemy state-based changes.
 - **[10]** Add in level timer (player needs to finish level before the time ends).
 - **[11]** Add in a scoring system.
