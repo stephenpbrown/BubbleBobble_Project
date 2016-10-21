@@ -34,6 +34,9 @@ public class PlayingState extends BasicGameState {
 	private Animation walking;
 	private Animation standing;
 	private Animation jump;
+//	private List<Animation> blowBubble;
+	private Animation blowBubble;
+	private Animation savedAnimation;
 	private FindPath createPath;
 	private List<FindPath> createPathList;
 	private boolean walk = false;
@@ -46,15 +49,9 @@ public class PlayingState extends BasicGameState {
 	private boolean fastFall = false;
 	private boolean showEdges = false;
 	private boolean pause = false;
-	private boolean findPath = true;
-	private boolean enemyJumpingSide = false;
-	private boolean enemyJumpingUp = false;
-	private boolean enemyFalling = true;
-	private float xVelocity = 0.1f;
-	private float yVelocity = -0.45f;	
-	private float enemyVelocityY = 0;
-	private float enemyVelocityX = 0;
-	private int count = 300;
+	private boolean blowingBubble = false;
+	private boolean bubDied = false;
+	private int bubbleTimeCount = 60;
 	private List<Blocks> collidingWithBlocks;
 	private List<Blocks> collidingWithBlocksP;
 	private Blocks lastBlock;
@@ -102,6 +99,7 @@ public class PlayingState extends BasicGameState {
 		instructions = new ArrayList<String>();
 		collidingWithBlocks = new ArrayList<Blocks>();
 		collidingWithBlocksP = new ArrayList<Blocks>();
+//		blowBubble = new ArrayList<Animation>();
 		livesRemaining = 3;
 		mapGrid = new char[24][28]; // 0-23 width, 0-27 height
 		
@@ -213,9 +211,24 @@ public class PlayingState extends BasicGameState {
 			e.render(g);
 		}
 		
+		for (Bubble b : bbg.bubble)
+		{
+			b.render(g);
+		}
+		
 		bbg.bub.render(g);
 		
-		g.drawString("" + livesRemaining, 30, bbg.ScreenHeight-22);
+		if (bbg.enemy.isEmpty() && livesRemaining != -1)
+		{
+			g.drawString("You win!", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
+		}
+		
+		g.drawString("01", bbg.ScreenWidth/2-8, bbg.ScreenHeight/9);
+		
+		if(livesRemaining >= 0)
+			g.drawString("" + livesRemaining, 30, bbg.ScreenHeight-22);
+		else
+			g.drawString("0", 30, bbg.ScreenHeight-22);
 		
 		for(Enemy e : bbg.enemy)
 		{
@@ -251,7 +264,6 @@ public class PlayingState extends BasicGameState {
 				else if(e.getID() == 3)
 					playerNode -= 3;
 				
-				count = 0;
 				createPath = new FindPath(node, enemyX, enemyY, playerX, playerY);
 	//			createPath = new FindPath(node, bbg.enemy.get(0).getCurrentLocation().getX(), bbg.enemy.get(0).getCurrentLocation().getY(), node.get(32).getX(), node.get(32).getY());
 				instructions = createPath.FindThePath();
@@ -319,9 +331,14 @@ public class PlayingState extends BasicGameState {
 //        			bbg.enemy.get(0).getCurrentLocation().getX(), bbg.enemy.get(0).getCurrentLocation().getY());
         }
         
-		if(pause)
+		if(pause && livesRemaining != -1)
 		{
 			g.drawString("Game Paused", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
+		}
+		
+		if(livesRemaining == -1)
+		{
+			g.drawString("Game Lost", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
 		}
 	}
 	
@@ -346,6 +363,17 @@ public class PlayingState extends BasicGameState {
 	{
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
+		// Add top blocks (left side of level indicator)
+		for (int i = 1; i < 14; i++)
+		{
+			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
+		}
+		
+		// Add top blocks (right side of level indicator)
+		for (int i = 16; i < 30; i++)
+		{
+			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
+		}	
 		
 		// Add floor blocks
 		for (int i = 3; i < 33; i++)
@@ -426,17 +454,17 @@ public class PlayingState extends BasicGameState {
 		// Lower left block
 		bbg.block.add(new Blocks(12, bbg.ScreenHeight-12, 1, 1));
 		
-		// Add top blocks (left side of level indicator)
-		for (int i = 1; i < 14; i++)
-		{
-			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
-		}
-		
-		// Add top blocks (right side of level indicator)
-		for (int i = 16; i < 30; i++)
-		{
-			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
-		}	
+//		// Add top blocks (left side of level indicator)
+//		for (int i = 1; i < 14; i++)
+//		{
+//			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
+//		}
+//		
+//		// Add top blocks (right side of level indicator)
+//		for (int i = 16; i < 30; i++)
+//		{
+//			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
+//		}	
 		
 		// Left side blocks
 		for (int i = 2; i < 14; i++)
@@ -478,24 +506,30 @@ public class PlayingState extends BasicGameState {
 	{
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
+		bbg.bub.removeAnimation(walking);
+		
 		//float xVelocity = bbg.bub.getVelocity().getX();
 		
 //		System.out.println(bbg.bub.getNumAnimations());
 		
+		if(!blowingBubble)
+		{
 //		if(onPlatform){
 			if(bbg.bub.getVelocity().getX() > 0){
+//				savedAnimation = walking;
 				bbg.bub.removeAnimation(walking);
 				walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_WALKING_LEFT, 45, 40), 
 						0, 0, 6, 0, true, 120, true);
 				bbg.bub.addAnimation(walking);
 			}
 			else if(bbg.bub.getVelocity().getX() == 0){
+//				savedAnimation = walking;
 				bbg.bub.removeAnimation();
 				walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_WALKING_LEFT, 45, 40), 
 						0, 0, 6, 0, true, 120, true);
 				bbg.bub.addAnimation(walking);
 			}
-//		}
+		}
 		
 		facingLeft = true;
 //		bbg.bub.setVelocity(new Vector(-0.2f, velocityY));
@@ -511,6 +545,10 @@ public class PlayingState extends BasicGameState {
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		float yVelocity = bbg.bub.getVelocity().getY();
 		
+		bbg.bub.removeAnimation(walking);
+		
+		if(!blowingBubble)
+		{
 //		if(onPlatform){
 			if(bbg.bub.getVelocity().getX() < 0){
 				bbg.bub.removeAnimation(walking);
@@ -524,7 +562,7 @@ public class PlayingState extends BasicGameState {
 						0, 0, 6, 0, true, 120, true);
 				bbg.bub.addAnimation(walking);
 			}
-//		}
+		}
 		
 		facingLeft = false;
 		
@@ -550,13 +588,16 @@ public class PlayingState extends BasicGameState {
 			
 			bbg.bub.removeImage(ResourceManager.getImage(bbg.BUB_STANDING));
 			
-			if(facingLeft == true)
+			if(!blowingBubble)
 			{
-				bbg.bub.AnimateLeft();
-			}
-			else
-			{
-				bbg.bub.AnimateRight();
+				if(facingLeft == true)
+				{
+					bbg.bub.AnimateLeft();
+				}
+				else
+				{
+					bbg.bub.AnimateRight();
+				}
 			}
 				
 			stand = false;
@@ -578,7 +619,7 @@ public class PlayingState extends BasicGameState {
 		if (input.isKeyDown(Input.KEY_LEFT) 
 			&& input.isKeyPressed(Input.KEY_LEFT)
 			)//&& !(input.isKeyDown(Input.KEY_RIGHT)))
-		{
+		{			
 			WalkLeft(bbg);
 			
 			if ((input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL)) && onPlatform == true && jumping == false)
@@ -607,28 +648,6 @@ public class PlayingState extends BasicGameState {
 		else if ((input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL)) && onPlatform == true && jumping == false)
 		{
 			StartJump();
-			
-//			if(velocityY < 0)
-//			{
-//				System.out.println("Jumping right");
-//				bbg.bub.removeAnimation(walking);
-//				jump = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_JUMPING_RIGHT, 45, 40), 
-//						0, 0, 1, 0, true, 120, true);
-//				bbg.bub.addAnimation(jump);
-//			}
-//			else if(velocityY > 0)
-//			{
-//				System.out.println("Jumping left");
-//				bbg.bub.removeAnimation(walking);
-//				jump = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_JUMPING_LEFT, 45, 40), 
-//						0, 0, 1, 0, true, 120, true);
-//				bbg.bub.addAnimation(jump);
-//			}
-			
-//			bbg.bub.removeAnimation(walking);
-//			walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_JUMPING_RIGHT, 45, 40), 
-//					0, 0, 1, 0, true, 120, true);
-//			bbg.bub.addAnimation(walking);
 		}
 		
 		else if(input.isKeyDown(Input.KEY_DOWN))
@@ -650,15 +669,93 @@ public class PlayingState extends BasicGameState {
 			else
 				showEdges = true;
 		}
+		if(input.isKeyPressed(Input.KEY_SPACE)) // Blow bubble
+		{
+//			for (Animation a : blowBubble)
+//			{
+			bbg.bub.removeAnimation(blowBubble);
+			
+//			if(!blowingBubble)
+//			{
+				if(!facingLeft)
+				{
+					if(bbg.bub.getVelocity().getX() > 0){
+						bbg.bub.removeAnimation(walking);
+						blowBubble = (new Animation(ResourceManager.getSpriteSheet(bbg.BUB_BLOWING_BUBBLE_RIGHT, 45, 40), 
+								0, 0, 4, 0, true, 120, true));
+					}
+					else if(bbg.bub.getVelocity().getX() == 0){
+						bbg.bub.removeAnimation();
+						blowBubble = (new Animation(ResourceManager.getSpriteSheet(bbg.BUB_BLOWING_BUBBLE_RIGHT, 45, 40), 
+								0, 0, 4, 0, true, 120, true));
+					}
+					
+					bbg.bub.addAnimation(blowBubble);
+					blowBubble.setLooping(false);
+//					}
+					
+					blowingBubble = true;
+					bubbleTimeCount = 40;
+					
+					float bubX = bbg.bub.getX();
+					float bubY = bbg.bub.getY();
+					float bubXVelocity = bbg.bub.getVelocity().getX();
+					
+					bbg.bubble.add(new Bubble(bubX, bubY));
+					
+					int size = bbg.bubble.size();
+					bbg.bubble.get(size-1).AnimateBlowingBubble();
+					
+					if(bubXVelocity > 0)
+						bbg.bubble.get(size-1).setVelocity(new Vector(bubXVelocity + 0.08f, 0));
+					else
+						bbg.bubble.get(size-1).setVelocity(new Vector(0.18f, 0));
+//					}
+				}
+				else
+				{
+					if(bbg.bub.getVelocity().getX() < 0){
+						bbg.bub.removeAnimation(walking);
+						blowBubble = (new Animation(ResourceManager.getSpriteSheet(bbg.BUB_BLOWING_BUBBLE_LEFT, 45, 40), 
+								0, 0, 4, 0, true, 120, true));
+					}
+					else if(bbg.bub.getVelocity().getX() == 0){
+						bbg.bub.removeAnimation();
+						blowBubble = (new Animation(ResourceManager.getSpriteSheet(bbg.BUB_BLOWING_BUBBLE_LEFT, 45, 40), 
+								0, 0, 4, 0, true, 120, true));
+					}
+					
+					bbg.bub.addAnimation(blowBubble);
+					blowBubble.setLooping(false);
+//					}
+					
+					blowingBubble = true;
+					bubbleTimeCount = 40;
+					
+					float bubX = bbg.bub.getX();
+					float bubY = bbg.bub.getY();
+					float bubXVelocity = bbg.bub.getVelocity().getX();
+					
+					bbg.bubble.add(new Bubble(bubX, bubY));
+					
+					int size = bbg.bubble.size();
+					bbg.bubble.get(size-1).AnimateBlowingBubble();
+					
+					if(bubXVelocity < 0)
+						bbg.bubble.get(size-1).setVelocity(new Vector(bubXVelocity + -0.08f, 0));
+					else
+						bbg.bubble.get(size-1).setVelocity(new Vector(-0.18f, 0));
+				}
+//			}
+		}
 	}
 	
 	public void PlayerCollisionDetection(StateBasedGame game)
 	{
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
-		
 		for (Blocks b : bbg.block)
 		{
-			if (bbg.bub.collides(b) != null)
+			if (bbg.bub.collides(b) != null && bbg.bub.getCoarseGrainedMaxY() > 100)
 			{				
 				if (bbg.bub.getCoarseGrainedMaxY() < b.getCoarseGrainedMinY()+5
 					&& jumping == false)
@@ -802,110 +899,113 @@ public class PlayingState extends BasicGameState {
 //		Blocks blockEnemyIsOn = null;
 		
 		for(Enemy e : bbg.enemy)
-		{			
+		{
 		
-			List<Node> path = e.getPath();
-			instructions = e.getInstructions();
-			
-			if(e.getJumping())
-				UpdateEnemyJump(bbg);
-			
-			e.setVelocity(new Vector(e.getXVelocity(), e.getYVelocity()));
-			
-			if(e.getOnPlatform() && !instructions.isEmpty() && !e.getJumping() && !e.getFalling())
-			{	
-	//			e.setVelocity(new Vector(enemyVelocityX, enemyVelocityY));
+			if(!e.getInBubble() && !e.getEnemyDying())
+			{
+				List<Node> path = e.getPath();
+				instructions = e.getInstructions();
 				
-				for(int i = instructions.size()-1; i >= 0; i--)
-				{
+				if(e.getJumping())
+					UpdateEnemyJump(bbg);
+				
+				e.setVelocity(new Vector(e.getXVelocity(), e.getYVelocity()));
+				
+				if(e.getOnPlatform() && !instructions.isEmpty() && !e.getJumping() && !e.getFalling())
+				{	
+		//			e.setVelocity(new Vector(enemyVelocityX, enemyVelocityY));
 					
-	//					System.out.println(path.get(i+1) + ", " + e.getCurrentLocation());
-					
-					if(instructions.get(i) == "WL" 
-							&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY()
-							)//&& enemyOnPlatform)
-	//							&& !enemyJumpingSide)
+					for(int i = instructions.size()-1; i >= 0; i--)
 					{
-						e.removeAnimation();
-						e.AnimateLeft();
-						e.setXVelocity(-0.1f);
-						e.setYVelocity(0);
-//						bottomToMiddle = lastBlock.getCoarseGrainedMinY() - (e.getCoarseGrainedMaxY() - e.getPosition().getY());
-						e.setPosition(e.getX(), e.getBottomToMiddle()+1);
-					}
-					//ystem.out.println(e.getCurrentLocation().getY() + ", " + path.get(i+1).getY());
-					else if(instructions.get(i) == "WR" 
-							&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-						e.removeAnimation();
-						e.AnimateRight();
-						e.setXVelocity(0.1f);
-						e.setYVelocity(0);
-//						bottomToMiddle() = lastBlock.getCoarseGrainedMinY() - (e.getCoarseGrainedMaxY() - e.getPosition().getY());
-						e.setPosition(e.getX(), e.getBottomToMiddle()+1);
-					}
-					else if(instructions.get(i) == "JL"
-							&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-						StartEnemyJump(bbg);
 						
-					}
-					else if(instructions.get(i) == "JR"
-							&& e.getCurrentLocation().getX() >= path.get(i+1).getX()
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-						StartEnemyJump(bbg);
-					}
-					else if(instructions.get(i) == "JU" 
-							&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-	//						e.setVelocity(new Vector(0, -0.15f));
-						e.setXVelocity(0);
-						e.setYVelocity(-0.15f);
-//						enemyVelocityX = 0;
-//						enemyVelocityY = -0.15f;
+		//					System.out.println(path.get(i+1) + ", " + e.getCurrentLocation());
 						
-						e.setOnPlatform(false);
-//						enemyOnPlatform = false;
-	//						enemyJumping = true;
-					}
-					else if(instructions.get(i) == "FL" 
-							&& e.getCurrentLocation().getX() <= path.get(i+1).getX()-1
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-						e.setPosition(e.getX()-7, e.getY());
-						
-						e.setOnPlatform(false);
-						e.setFalling(true);
-//						enemyOnPlatform = false;
-//						enemyFalling = true;
-					}
-					else if(instructions.get(i) == "FR"
-							&& e.getCurrentLocation().getX() >= path.get(i+1).getX()+1
-							&& e.getCurrentLocation().getY() == path.get(i+1).getY())
-					{
-						e.setPosition(e.getX()+7, e.getY());
-						
-						e.setOnPlatform(false);
-						e.setFalling(true);
-//						enemyOnPlatform = false;
-//						enemyFalling = true;
+						if(instructions.get(i) == "WL" 
+								&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY()
+								)//&& enemyOnPlatform)
+		//							&& !enemyJumpingSide)
+						{
+							e.removeAnimation();
+							e.AnimateLeft();
+							e.setXVelocity(-0.1f);
+							e.setYVelocity(0);
+	//						bottomToMiddle = lastBlock.getCoarseGrainedMinY() - (e.getCoarseGrainedMaxY() - e.getPosition().getY());
+							e.setPosition(e.getX(), e.getBottomToMiddle()+1);
+						}
+						//ystem.out.println(e.getCurrentLocation().getY() + ", " + path.get(i+1).getY());
+						else if(instructions.get(i) == "WR" 
+								&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+							e.removeAnimation();
+							e.AnimateRight();
+							e.setXVelocity(0.1f);
+							e.setYVelocity(0);
+	//						bottomToMiddle() = lastBlock.getCoarseGrainedMinY() - (e.getCoarseGrainedMaxY() - e.getPosition().getY());
+							e.setPosition(e.getX(), e.getBottomToMiddle()+1);
+						}
+						else if(instructions.get(i) == "JL"
+								&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+							StartEnemyJump(bbg);
+							
+						}
+						else if(instructions.get(i) == "JR"
+								&& e.getCurrentLocation().getX() >= path.get(i+1).getX()
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+							StartEnemyJump(bbg);
+						}
+						else if(instructions.get(i) == "JU" 
+								&& e.getCurrentLocation().getX() == path.get(i+1).getX() 
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+		//						e.setVelocity(new Vector(0, -0.15f));
+							e.setXVelocity(0);
+							e.setYVelocity(-0.15f);
+	//						enemyVelocityX = 0;
+	//						enemyVelocityY = -0.15f;
+							
+							e.setOnPlatform(false);
+	//						enemyOnPlatform = false;
+		//						enemyJumping = true;
+						}
+						else if(instructions.get(i) == "FL" 
+								&& e.getCurrentLocation().getX() <= path.get(i+1).getX()-1
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+							e.setPosition(e.getX()-7, e.getY());
+							
+							e.setOnPlatform(false);
+							e.setFalling(true);
+	//						enemyOnPlatform = false;
+	//						enemyFalling = true;
+						}
+						else if(instructions.get(i) == "FR"
+								&& e.getCurrentLocation().getX() >= path.get(i+1).getX()+1
+								&& e.getCurrentLocation().getY() == path.get(i+1).getY())
+						{
+							e.setPosition(e.getX()+7, e.getY());
+							
+							e.setOnPlatform(false);
+							e.setFalling(true);
+	//						enemyOnPlatform = false;
+	//						enemyFalling = true;
+						}
 					}
 				}
-			}
-			else if(instructions.isEmpty() && !e.getJumping())
-			{
-	//			StartEnemyJump();
-				e.setYVelocity(0.15f);
-				e.setFalling(true);
-//				enemyVelocityY = 0.15f;
-//				enemyFalling = true;
-	//			enemyVelocityX = 0.05f;
-	////			bbg.enemy.get(0).setVelocity(new Vector(0, 0.15f));
+				else if(instructions.isEmpty() && !e.getJumping())
+				{
+		//			StartEnemyJump();
+					e.setYVelocity(0.15f);
+					e.setFalling(true);
+	//				enemyVelocityY = 0.15f;
+	//				enemyFalling = true;
+		//			enemyVelocityX = 0.05f;
+		////			bbg.enemy.get(0).setVelocity(new Vector(0, 0.15f));
+				}
 			}
 		}
 	}
@@ -918,12 +1018,8 @@ public class PlayingState extends BasicGameState {
 		{
 			for (Enemy e : bbg.enemy)
 			{	
-				if (e.collides(b) != null)
-				{
-					// Find the current location of the enemy
-				
-//					System.out.println("Enemy location: " + e.getPosition());
-						
+				if (e.collides(b) != null && !e.getInBubble() && e.getCoarseGrainedMaxY() > 100)
+				{						
 					// Collision detection
 					if (e.getCoarseGrainedMaxY() < b.getCoarseGrainedMinY()+5
 						)//&& jumping == false)
@@ -938,6 +1034,13 @@ public class PlayingState extends BasicGameState {
 						
 						
 						e.getCollidingWithBlocks().add(b);
+						
+						
+						if(e.getEnemyDying() && e.getVelocity().getY() > 0)
+						{
+							e.removeAnimation();
+							e.setRemoveEnemy(true);
+						}
 //						enemyOnPlatform = true;
 //						enemyJumping = false;
 //						enemyFalling = false;
@@ -1009,16 +1112,17 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
-		PlayerCollisionDetection(bbg); // Detect player collisions		
+		PlayerCollisionDetection(bbg); // Detect player collisions			
 		EnemyCollisionDetection(bbg); // Detect enemy collisions
 		
+		// Check for Bub touching an enemy and losing a life. A hit timeout of 3 seconds is activated.
 		if(playerHitTimeout == 0)
 		{
 			for(Enemy e : bbg.enemy)
 			{
-				if(e.collides(bbg.bub) != null)
+				if(e.collides(bbg.bub) != null && !e.getInBubble() && !e.getEnemyDying())
 				{
-					System.out.println("Gotcha!");
+//					System.out.println("Gotcha!");
 					livesRemaining--; // KEEP GOING HERE
 					playerHitTimeout = 180;
 					break;
@@ -1028,30 +1132,176 @@ public class PlayingState extends BasicGameState {
 		else
 			playerHitTimeout--;
 		
-		if(input.isKeyPressed(Input.KEY_P))
+		if(livesRemaining == 0)
 		{
+			// Remove enemies that have died
+			Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
+			
+			while (removeEnemy.hasNext())
+			{
+				Enemy e = removeEnemy.next();
+				removeEnemy.remove();
+			}
+			
+			bbg.bub.removeAnimation();
+//			bbg.bub.removeAnimation(standing);
+			bbg.bub.removeAnimation(walking);
+			
+			bbg.bub.AnimateBubDying();
+			bbg.bub.setBubDead(true);
+//			bbg.bub.removeAnimation();
+			
+			livesRemaining = -1;
+			
+			pause = true;
+		}
+		else
+		{
+			if(input.isKeyPressed(Input.KEY_P))
+			{
+				if(pause)
+					pause = false;
+				else
+					pause = true;
+			}
+			
 			if(pause)
-				pause = false;
-			else
-				pause = true;
+				delta = 0;
+			
+			bubbleTimeCount--;
+			if(blowingBubble && bubbleTimeCount == 0)
+			{
+//				System.out.println("Yo");
+				bbg.bub.removeAnimation(blowBubble);
+				blowingBubble = false;
+				
+				if(bbg.bub.getVelocity().getX() > 0)
+				{
+//					System.out.println("Yo again");
+					walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_WALKING_RIGHT, 45, 40), 
+							0, 0, 6, 0, true, 120, true);
+					bbg.bub.addAnimation(walking);
+	//				WalkRight(bbg);
+				}
+				else if(bbg.bub.getVelocity().getX() < 0)
+				{
+					walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_WALKING_LEFT, 45, 40), 
+							0, 0, 6, 0, true, 120, true);
+					bbg.bub.addAnimation(walking);
+				}
+				else if(!facingLeft)
+					bbg.bub.AnimateRight();
+				else
+					bbg.bub.AnimateLeft();
+			}
+			
+			
+			// Hit enemy with bubble
+			for (Enemy e : bbg.enemy)
+			{
+				for (Bubble b : bbg.bubble)
+				{
+					if(e.collides(b) != null && !e.getInBubble() && !e.getEnemyDying())
+					{
+//						System.out.println("Enemy hit");
+						e.removeAnimation();
+						e.AnimateInBubble();
+						e.setVelocity(new Vector(0, -0.05f));
+						e.setTimeInBubble(300);
+						b.removeAnimation();
+						b.setRemoveBubble(true);
+						break;
+					}
+				}
+			}
+			
+			// Remove any bubbles that have hit an enemy
+			Iterator<Bubble> removeBubble = bbg.bubble.iterator();
+			
+			while (removeBubble.hasNext())
+			{
+				Bubble b = removeBubble.next();
+				
+				if(b.getRemoveBubble())
+					removeBubble.remove();
+			}
+			
+			// After 5 seconds, the enemy breaks out of the bubble and goes back to normal
+			for (Enemy e : bbg.enemy)
+			{
+				if(e.getInBubble() && !e.getEnemyDying())
+				{
+	//				System.out.println(e.getTimeInBubble());
+					if(e.getTimeInBubble() <= 0)
+					{
+						e.removeAnimation();
+						e.AnimateLeft();
+						e.setInBubble(false);
+						e.setVelocity(new Vector(0, 0.1f));
+					}
+					else
+						e.decTimeInBubble();
+				}
+			}
+			
+			// Kill the enemy when bub hits into its bubble
+			for (Enemy e : bbg.enemy)
+			{
+				if(e.getInBubble())
+				{
+					if(e.collides(bbg.bub) != null)
+					{
+						e.removeAnimation();
+						e.AnimateEnemyDying();
+						e.setInBubble(false);
+						e.setEnemyDying(true);
+						e.setVelocity(new Vector(0, -0.25f));
+					}
+				}
+			}
+			
+	//		System.out.println(bbg.enemy.size());
+			
+			for (Enemy e : bbg.enemy)
+			{
+				if(e.getEnemyDying())
+				{
+	//				e.removeAnimation();
+	//				e.AnimateEnemyDying();
+					e.setVelocity(new Vector(0, e.getVelocity().getY() + 0.003f));
+				}
+			}	
+			
+			// Remove enemies that have died
+			Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
+			
+			while (removeEnemy.hasNext())
+			{
+				Enemy e = removeEnemy.next();
+				
+				if(e.getRemoveEnemy())
+					removeEnemy.remove();
+			}
+	
+			if(!pause)
+			{
+				Controls(bbg, container); // Check what controls are happening by the player
+				PlayerMovements(bbg); // Checks how the player should be setup based on controls
+				EnemyMovements(bbg); // Checks how the enemies should move
+			}	
+			
+			for (Enemy e : bbg.enemy)
+			{
+				e.update(delta);
+			}
+			
+			for (Bubble b : bbg.bubble)
+			{
+				b.update(delta);
+			}
+			
+			bbg.bub.update(delta); // Update the game state
 		}
-		
-		if(pause)
-			delta = 0;
-		
-		if(!pause)
-		{
-			Controls(bbg, container); // Check what controls are happening by the player
-			PlayerMovements(bbg); // Checks how the player should be setup based on controls
-			EnemyMovements(bbg);
-		}		
-		
-		for (Enemy e : bbg.enemy)
-		{
-			e.update(delta);
-		}
-		
-		bbg.bub.update(delta); // Update the game state
 		
 	}
 	 
