@@ -9,11 +9,11 @@
 - **[7]** Add in collision detection between the main character and enemies and reduce lives remaining counter.
 - **[8]** Allow the main character to attack enemies and destroy them with bubbles and allow enemies to hurt Bub.
 - **[9]** Add in enemy state-based changes.
+- **[10]** Add in level timer (player needs to finish level before the time ends).
 
 ## Open Issues ##
  
 *Low-Bar Issues*
-- **[10]** Add in level timer (player needs to finish level before the time ends).
 - **[11]** Add in a scoring system.
 - **[12]** Add in level 2.
 - **[13]** Add in GameWon state and Splash Screen.

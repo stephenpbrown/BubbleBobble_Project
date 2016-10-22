@@ -63,6 +63,8 @@ public class PlayingState extends BasicGameState {
 	float bottomToMiddle = 0;
 	private int livesRemaining;
 	private int playerHitTimeout = 0;
+	private int levelTimer = 1800;
+	private int timerDisplay = 0;
 
 	private List<Node> node;
 	private List<String> instructions;
@@ -111,9 +113,13 @@ public class PlayingState extends BasicGameState {
 				mapGrid[i][j] = 'E';
 		
 		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+61, 0));
+		bbg.enemy.get(0).setWalkingLeft(true);
 		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+61, 1));
-		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 48), 2));
-		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 48), 3));
+		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 60), 2));
+		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 60), 3));
+		bbg.enemy.get(3).setWalkingLeft(true);
+		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+60, 0));
+		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+60, 1));
 		
 //		node.add(new Node(bbg.bub.getX(),bbg.bub.getY(), null, null, null, null, null));
 //		node.add(new Node(bbg.enemy.get(0).getX(),bbg.enemy.get(0).getY(), null, null, null, null, null));
@@ -191,7 +197,8 @@ public class PlayingState extends BasicGameState {
 		bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
 		bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
 		bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
-	
+		bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+		bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
 //		for(int i = 0; i < 2; i++)
 //			bbg.enemy.get(i).setVelocity(new Vector(0.15f, 0));
 	}
@@ -230,6 +237,14 @@ public class PlayingState extends BasicGameState {
 		else
 			g.drawString("0", 30, bbg.ScreenHeight-22);
 		
+		if(levelTimer%60 == 0)
+			timerDisplay = levelTimer/60;
+		
+		if(timerDisplay >= 0)
+			g.drawString("Timer: " + timerDisplay, 5*bbg.ScreenWidth/6, bbg.ScreenHeight/10-12);
+		else
+			g.drawString("Timer: " + 0, 5*bbg.ScreenWidth/6, bbg.ScreenHeight/10-12);
+		
 		for(Enemy e : bbg.enemy)
 		{
 	//		if(findPath == true)
@@ -257,12 +272,12 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 				
-				if(e.getID() == 1)
-					playerNode += 6;
-				else if(e.getID() == 2)
-					playerNode += 15;
-				else if(e.getID() == 3)
-					playerNode -= 3;
+//				if(e.getID() == 1)
+//					playerNode += 6;
+//				else if(e.getID() == 2)
+//					playerNode += 15;
+//				else if(e.getID() == 3)
+//					playerNode -= 3;
 				
 				createPath = new FindPath(node, enemyX, enemyY, playerX, playerY);
 	//			createPath = new FindPath(node, bbg.enemy.get(0).getCurrentLocation().getX(), bbg.enemy.get(0).getCurrentLocation().getY(), node.get(32).getX(), node.get(32).getY());
@@ -1094,9 +1109,18 @@ public class PlayingState extends BasicGameState {
 						e.setPosition(68, e.getY());
 //						e.setCurrentLocation(new Vector(node.get(0).getX(), node.get(0).getY()));
 //						e.setVelocity(new Vector(0.15f, 0));
-						if(e.getOnPlatform())
-							e.setXVelocity(0.1f);
-						e.setYVelocity(0.15f);
+						if(!e.getEnemyAngry())
+						{
+							if(e.getOnPlatform())
+								e.setXVelocity(0.1f);
+							e.setYVelocity(0.15f);
+						}
+						else
+						{
+							if(e.getOnPlatform())
+								e.setXVelocity(0.2f);
+							e.setYVelocity(0.2f);
+						}
 //						enemyVelocityX = 0;
 //						enemyVelocityY = 0.15f;
 					}
@@ -1104,9 +1128,18 @@ public class PlayingState extends BasicGameState {
 					{
 						e.setPosition(bbg.ScreenWidth - 68, e.getY());
 //						e.setCurrentLocation(b.getPosition());
-						if(e.getOnPlatform())
-							e.setXVelocity(-0.1f);
-						e.setYVelocity(0.15f);
+						if(!e.getEnemyAngry())
+						{
+							if(e.getOnPlatform())
+								e.setXVelocity(-0.1f);
+							e.setYVelocity(0.15f);
+						}
+						else
+						{
+							if(e.getOnPlatform())
+								e.setXVelocity(-0.2f);
+							e.setYVelocity(0.2f);
+						}
 //						enemyVelocityX = 0;
 //						enemyVelocityY = 0.15f;
 //						e.setVelocity(new Vector(-0.2f, 0));
@@ -1229,11 +1262,20 @@ public class PlayingState extends BasicGameState {
 				if(e.getTimeInBubble() <= 0)
 				{
 					e.removeAnimation();
-					e.AnimateAngryLeft();
+					if(e.getWalkingLeft())
+					{
+						e.AnimateAngryLeft();
+						e.setYVelocity(0.2f);
+						e.setXVelocity(-0.2f);
+					}
+					else
+					{
+						e.AnimateAngryRight();
+						e.setYVelocity(0.2f);
+						e.setXVelocity(0.2f);
+					}
 //					e.AnimateLeft();
 					e.setInBubble(false);
-					e.setYVelocity(0.2f);
-					e.setXVelocity(-0.2f);
 					e.setWalkingLeft(true);
 					e.setEnemyAngry(true);
 					e.setFalling(true);
@@ -1288,6 +1330,7 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
+		levelTimer--;
 		PlayerCollisionDetection(bbg); // Detect player collisions			
 		EnemyCollisionDetection(bbg); // Detect enemy collisions
 		
@@ -1307,6 +1350,12 @@ public class PlayingState extends BasicGameState {
 		}
 		else
 			playerHitTimeout--;
+		
+		if(timerDisplay == 0)
+		{
+			for (Enemy e : bbg.enemy)
+				e.setEnemyAngry(true);
+		}
 		
 		if(livesRemaining == 0)
 		{
