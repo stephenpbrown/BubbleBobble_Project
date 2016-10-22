@@ -20,6 +20,8 @@ public class Enemy extends Entity {
 	private boolean inBubble;
 	private boolean enemyDying;
 	private boolean removeEnemy;
+	private boolean enemyAngry;
+	private boolean walkingLeft;
 	private float xVelocity;
 	private float yVelocity;
 	private float bottomToMiddle;
@@ -65,9 +67,51 @@ public class Enemy extends Entity {
 		addAnimation(standing);
 	}
 	
+	public void AnimateAngryRight()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.LEVEL_1_ENEMY_ANGRY_RIGHT, 45, 40), 
+				 0, 0, 3, 0, true, 300, true);
+		addAnimation(standing);
+	}
+	
+	public void AnimateAngryLeft()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.LEVEL_1_ENEMY_ANGRY_LEFT, 45, 40), 
+				0, 0, 3, 0, true, 300, true);
+		addAnimation(standing);
+	}
+	
+	public boolean getEnemyDying()
+	{
+		return this.enemyDying;
+	}
+	
+	public void setEnemyDying(boolean enemyDying)
+	{
+		this.enemyDying = enemyDying;
+	}
+	
+	public boolean getWalkingLeft()
+	{
+		return this.walkingLeft;
+	}
+	
+	public void setWalkingLeft(boolean walkingLeft)
+	{
+		this.walkingLeft = walkingLeft;
+	}
+	
 	public void AnimateInBubble()
 	{
 		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.ENEMY_IN_BUBBLE, 40, 40), 
+				0, 0, 2, 0, true, 300, true);
+		addAnimation(standing);
+		inBubble = true;
+	}
+	
+	public void AnimateAngryInBubble()
+	{
+		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.ANGRY_ENEMY_IN_BUBBLE, 40, 40), 
 				0, 0, 2, 0, true, 300, true);
 		addAnimation(standing);
 		inBubble = true;
@@ -81,14 +125,14 @@ public class Enemy extends Entity {
 		enemyDying = true;
 	}
 	
-	public boolean getEnemyDying()
+	public boolean getEnemyAngry()
 	{
-		return this.enemyDying;
+		return this.enemyAngry;
 	}
 	
-	public void setEnemyDying(boolean enemyDying)
+	public void setEnemyAngry(boolean enemyAngry)
 	{
-		this.enemyDying = enemyDying;
+		this.enemyAngry = enemyAngry;
 	}
 	
 	public boolean getRemoveEnemy()
