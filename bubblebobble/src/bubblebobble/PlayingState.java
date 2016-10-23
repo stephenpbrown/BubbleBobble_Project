@@ -51,20 +51,23 @@ public class PlayingState extends BasicGameState {
 	private boolean pause = false;
 	private boolean blowingBubble = false;
 	private boolean bubDied = false;
+	private boolean stopTimer = false;
 	private int bubbleTimeCount = 60;
 	private List<Blocks> collidingWithBlocks;
 	private List<Blocks> collidingWithBlocksP;
 	private Blocks lastBlock;
 	public Vector playerLocation;
-	float velocityY = 0;
-	float velocityX = 0;
-	float positionX = 0;
-	float positionY = 0;
-	float bottomToMiddle = 0;
+	private float velocityY = 0;
+	private float velocityX = 0;
+	private float positionX = 0;
+	private float positionY = 0;
+	private float bottomToMiddle = 0;
 	private int livesRemaining;
 	private int playerHitTimeout = 0;
-	private int levelTimer = 1800;
-	private int timerDisplay = 0;
+	private int levelTimer = 1800; // Timer goes for 30 seconds
+	private int timerDisplay = 0; 
+	private int score = 0;
+	
 
 	private List<Node> node;
 	private List<String> instructions;
@@ -237,13 +240,15 @@ public class PlayingState extends BasicGameState {
 		else
 			g.drawString("0", 30, bbg.ScreenHeight-22);
 		
-		if(levelTimer%60 == 0)
+		if(levelTimer%60 == 0 && !stopTimer)
 			timerDisplay = levelTimer/60;
 		
 		if(timerDisplay >= 0)
 			g.drawString("Timer: " + timerDisplay, 5*bbg.ScreenWidth/6, bbg.ScreenHeight/10-12);
 		else
 			g.drawString("Timer: " + 0, 5*bbg.ScreenWidth/6, bbg.ScreenHeight/10-12);
+		
+		g.drawString("Score: " + score, 48, bbg.ScreenHeight/10-12);
 		
 		for(Enemy e : bbg.enemy)
 		{
@@ -1321,7 +1326,11 @@ public class PlayingState extends BasicGameState {
 			Enemy e = removeEnemy.next();
 			
 			if(e.getRemoveEnemy())
+			{
 				removeEnemy.remove();
+				
+				score += 1000;
+			}
 		}
 	}
 	
@@ -1331,8 +1340,15 @@ public class PlayingState extends BasicGameState {
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
 		levelTimer--;
+		if(bbg.enemy.isEmpty() && !stopTimer)
+		{
+			stopTimer = true;
+			score *= Math.round(timerDisplay/9);
+		}
+		
 		PlayerCollisionDetection(bbg); // Detect player collisions			
 		EnemyCollisionDetection(bbg); // Detect enemy collisions
+		
 		
 		// Check for Bub touching an enemy and losing a life. A hit timeout of 3 seconds is activated.
 		if(playerHitTimeout == 0)
@@ -1354,7 +1370,22 @@ public class PlayingState extends BasicGameState {
 		if(timerDisplay == 0)
 		{
 			for (Enemy e : bbg.enemy)
+			{
+				e.removeAnimation();
 				e.setEnemyAngry(true);
+				if(e.getWalkingLeft())
+				{
+					e.AnimateAngryLeft();
+					e.setYVelocity(0.2f);
+					e.setXVelocity(-0.2f);
+				}
+				else
+				{
+					e.AnimateAngryRight();
+					e.setYVelocity(0.2f);
+					e.setXVelocity(0.2f);
+				}
+			}
 		}
 		
 		if(livesRemaining == 0)
