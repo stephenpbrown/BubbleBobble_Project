@@ -14,7 +14,13 @@ import jig.ResourceManager;
 
 public class BubbleBobbleGame extends StateBasedGame
 {
-	public static final int PLAYINGSTATE = 0;
+	public static final int SPLASHSCREENSTATE = 0;
+	public static final int PLAYINGSTATE = 1;
+	public static final int LEVEL1STATE = 2;
+	public static final int LEVEL2STATE = 3;
+	public static final int GOSTATE = 4;
+	public static final int GAMEOVERSTATE = 5;
+	public static final int GAMEWONSTATE = 6;
 	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
@@ -40,7 +46,15 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final String BUB_JUMPING_RIGHT = "resource/Bub_Jumping_Right.png";
 	public static final String LEVEL_1_SINGLE_TILE = "resource/Level_1_Single_Tile.png";
 	public static final String LEVEL_1_4x4_TILE = "resource/Level_1_4x4_Tile.png";
-		
+	public static final String LEVEL_2_SINGLE_TILE = "resource/Level_2_Single_Tile.png";
+	public static final String LEVEL_2_4x4_TILE = "resource/Level_2_4x4_Tile.png";	
+	public static final String LEVEL_1_RSC = "resource/Level_1.png";
+	public static final String LEVEL_2_RSC = "resource/Level_2.png";
+	public static final String GO_RSC = "resource/Go.png";
+	public static final String SPLASH_SCREEN_RSC = "resource/SplashScreen.png";
+	public static final String GAMEWON_RSC = "resource/GameWon.png";
+	public static final String GAMEOVER_BANNER_RSC = "resource/Gameover2.png";
+	
 	final int ScreenWidth;
 	final int ScreenHeight;
 	
@@ -63,7 +77,13 @@ public class BubbleBobbleGame extends StateBasedGame
 	
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		addState(new SplashScreenState());
 		addState(new PlayingState());
+		addState(new Level1State());
+		addState(new Level2State());
+		addState(new GoState());
+		addState(new GameWonState());
+		addState(new GameOverState());
 		
 		ResourceManager.loadImage(BUB_STANDING);
 		ResourceManager.loadImage(BUB_STANDING_RIGHT);
@@ -88,6 +108,14 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadImage(BUB_JUMPING_LEFT);
 		ResourceManager.loadImage(LEVEL_1_SINGLE_TILE);
 		ResourceManager.loadImage(LEVEL_1_4x4_TILE);
+		ResourceManager.loadImage(LEVEL_2_SINGLE_TILE);
+		ResourceManager.loadImage(LEVEL_2_4x4_TILE);
+		ResourceManager.loadImage(LEVEL_1_RSC);
+		ResourceManager.loadImage(LEVEL_2_RSC);
+		ResourceManager.loadImage(GO_RSC);
+		ResourceManager.loadImage(SPLASH_SCREEN_RSC);
+		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
+		ResourceManager.loadImage(GAMEWON_RSC);
 		
 		bub = new Bub(ScreenWidth / 2, 2*ScreenHeight/3+60);
 		

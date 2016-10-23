@@ -18,6 +18,10 @@ public class Blocks extends Entity
 			addImageWithBoundingBox(ResourceManager.getImage(BubbleBobbleGame.LEVEL_1_SINGLE_TILE));
 		if (level == 1 && size == 4)
 			addImageWithBoundingBox(ResourceManager.getImage(BubbleBobbleGame.LEVEL_1_4x4_TILE));
+		if (level == 2 && size == 1)
+			addImageWithBoundingBox(ResourceManager.getImage(BubbleBobbleGame.LEVEL_2_SINGLE_TILE));
+		if (level == 2 && size == 4)
+			addImageWithBoundingBox(ResourceManager.getImage(BubbleBobbleGame.LEVEL_2_4x4_TILE));
 		
 		velocity = new Vector(0, 0);
 	 }

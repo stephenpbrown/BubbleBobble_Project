@@ -51,7 +51,7 @@ public class Bub extends Entity
 	public void AnimateBubDying()
 	{
 		standing = new Animation(ResourceManager.getSpriteSheet(BubbleBobbleGame.BUB_DYING, 42, 79), 
-				0, 0, 10, 0, true, 170, true);
+				0, 0, 10, 0, true, 150, true);
 		addAnimation(standing);
 		standing.setLooping(false);
 	}
