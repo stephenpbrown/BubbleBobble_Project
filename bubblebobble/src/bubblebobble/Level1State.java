@@ -1,0 +1,74 @@
+package bubblebobble;
+
+import java.util.Iterator;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+
+import jig.ResourceManager;
+import jig.Vector;
+
+public class Level1State extends BasicGameState
+{
+	private int timer;
+	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
+	private int lastKnownScore;
+	
+	@Override
+	public void init(GameContainer container, StateBasedGame game)
+			throws SlickException {
+	}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) {
+		timer = 1000;
+		
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
+		
+		//sResourceManager.getSound(bg.LEVEL_SONG_RSC).play();
+	}
+
+	public void setUserScore(int score) {
+		lastKnownScore = score;
+	}
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game,
+			Graphics g) throws SlickException {
+
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
+		
+		g.drawImage(ResourceManager.getImage(BubbleBobbleGame.LEVEL_1_RSC), 185, 210);
+	}
+	
+	@Override
+	public void update(GameContainer container, StateBasedGame game,
+			int delta) throws SlickException {
+		
+		
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
+		
+		timer -= delta;
+		if (timer <= 0)
+		{
+//			bg.paddle.setPosition(bg.ScreenWidth/2, bg.ScreenHeight-16);
+////			bg.paddles.get(0).setPosition(16, bg.ScreenHeight-110);
+////			bg.paddles.get(1).setPosition(bg.ScreenWidth-16, bg.ScreenHeight-110);
+//			bg.ball.setPosition(bg.ScreenWidth / 4, bg.ScreenHeight / 2);
+//			bg.ball.setVelocity(new Vector(.09f, .19f));
+//			bg.ball.removeBrokenBall();
+			game.enterState(BubbleBobbleGame.GOSTATE, new FadeOutTransition(), new FadeInTransition());
+		}
+
+	}
+
+	@Override
+	public int getID() {
+		return BubbleBobbleGame.LEVEL1STATE;
+	}
+}

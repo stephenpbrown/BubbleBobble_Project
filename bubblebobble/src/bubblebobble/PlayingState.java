@@ -17,6 +17,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import jig.ResourceManager;
 import jig.Vector;
@@ -67,6 +69,8 @@ public class PlayingState extends BasicGameState {
 	private int levelTimer = 1800; // Timer goes for 30 seconds
 	private int timerDisplay = 0; 
 	private int score = 0;
+	private int level = 1;
+	private int deadTimer = 0;
 	
 
 	private List<Node> node;
@@ -115,95 +119,183 @@ public class PlayingState extends BasicGameState {
 			for(int j = 0; j < 28; j++)
 				mapGrid[i][j] = 'E';
 		
-		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+61, 0));
-		bbg.enemy.get(0).setWalkingLeft(true);
-		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+61, 1));
-		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 60), 2));
-		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 60), 3));
-		bbg.enemy.get(3).setWalkingLeft(true);
-		bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+60, 0));
-		bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+60, 1));
-		
-//		node.add(new Node(bbg.bub.getX(),bbg.bub.getY(), null, null, null, null, null));
-//		node.add(new Node(bbg.enemy.get(0).getX(),bbg.enemy.get(0).getY(), null, null, null, null, null));
-		
-//		System.out.println(node.get(0).getX());
-		
-		Level1blocks(bbg);
-		
-		for(int i = 0; i < node.size(); i++)
-			node.get(i).setRefBlock(bbg.block.get(i));
-		
-		for(Node n : node)
+		if(level == 1)
 		{
-			for (Node n2 : node)
+			// Add enemies into the map
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+61, 0));
+			bbg.enemy.get(0).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+61, 1));
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 60), 2));
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 60), 3));
+			bbg.enemy.get(3).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+100, 4));
+//			bbg.enemy.get(4).setVelocity(new Vector(0, 0.15f));
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+100, 5));
+			
+			Level1blocks(bbg);
+			
+			for(int i = 0; i < node.size(); i++)
+				node.get(i).setRefBlock(bbg.block.get(i));
+			
+			for(Node n : node)
 			{
-				if(n != n2)
+				for (Node n2 : node)
 				{
-					if((n.getWalkLeft() == null) && (n2.getX() == (n.getX() - 24)) && (n2.getY() == n.getY()))
-						n.setWalkLeft(n2);
-					
-					else if((n.getWalkRight() == null) && (n2.getX() == (n.getX() + 24)) && (n2.getY() == n.getY()))
-						n.setWalkRight(n2);
+					if(n != n2)
+					{
+						if((n.getWalkLeft() == null) && (n2.getX() == (n.getX() - 24)) && (n2.getY() == n.getY()))
+							n.setWalkLeft(n2);
+						
+						else if((n.getWalkRight() == null) && (n2.getX() == (n.getX() + 24)) && (n2.getY() == n.getY()))
+							n.setWalkRight(n2);
+					}
 				}
 			}
+			
+			// Jump left and right on the platforms
+			node.get(39).setJumpLeft(node.get(38));
+			node.get(38).setJumpRight(node.get(39));
+			node.get(69).setJumpLeft(node.get(68));
+			node.get(68).setJumpRight(node.get(69));
+			node.get(75).setJumpLeft(node.get(74));
+			node.get(74).setJumpRight(node.get(75));
+			
+			// Fall left and right onto the platforms
+			node.get(62).setFallLeft(node.get(1));
+			node.get(44).setFallLeft(node.get(64));
+			node.get(34).setFallLeft(node.get(46));
+			node.get(28).setFallLeft(node.get(36));
+			node.get(39).setFallLeft(node.get(53));
+			node.get(69).setFallLeft(node.get(10));
+			node.get(75).setFallLeft(node.get(18));
+			
+			node.get(33).setFallRight(node.get(41));
+			node.get(43).setFallRight(node.get(59));
+			node.get(61).setFallRight(node.get(79));
+			node.get(81).setFallRight(node.get(26));
+			node.get(38).setFallRight(node.get(52));
+			node.get(68).setFallRight(node.get(9));
+			node.get(74).setFallRight(node.get(17));
+			
+			// Jump up onto platforms
+			node.get(5).setJumpUp(node.get(65));
+			node.get(13).setJumpUp(node.get(71));
+			node.get(22).setJumpUp(node.get(78));
+			node.get(66).setJumpUp(node.get(45));
+			node.get(72).setJumpUp(node.get(53));
+			node.get(77).setJumpUp(node.get(60));
+			node.get(48).setJumpUp(node.get(35));
+			node.get(57).setJumpUp(node.get(42));
+			node.get(37).setJumpUp(node.get(28));
+			node.get(40).setJumpUp(node.get(33));
+			
+			bbg.bub.setCurrentLocation(new Vector(node.get(15).getX(), node.get(15).getY()));
+			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(65).getX(), node.get(65).getY()));
+			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
+			bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
+			bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
 		}
-		
-		// Jump left and right on the platforms
-		node.get(39).setJumpLeft(node.get(38));
-		node.get(38).setJumpRight(node.get(39));
-		node.get(69).setJumpLeft(node.get(68));
-		node.get(68).setJumpRight(node.get(69));
-		node.get(75).setJumpLeft(node.get(74));
-		node.get(74).setJumpRight(node.get(75));
-		
-		// Fall left and right onto the platforms
-		node.get(62).setFallLeft(node.get(1));
-		node.get(44).setFallLeft(node.get(64));
-		node.get(34).setFallLeft(node.get(46));
-		node.get(28).setFallLeft(node.get(36));
-		node.get(39).setFallLeft(node.get(53));
-		node.get(69).setFallLeft(node.get(10));
-		node.get(75).setFallLeft(node.get(18));
-		
-		node.get(33).setFallRight(node.get(41));
-		node.get(43).setFallRight(node.get(59));
-		node.get(61).setFallRight(node.get(79));
-		node.get(81).setFallRight(node.get(26));
-		node.get(38).setFallRight(node.get(52));
-		node.get(68).setFallRight(node.get(9));
-		node.get(74).setFallRight(node.get(17));
-		
-		// Jump up onto platforms
-		node.get(5).setJumpUp(node.get(65));
-		node.get(13).setJumpUp(node.get(71));
-		node.get(22).setJumpUp(node.get(78));
-		node.get(66).setJumpUp(node.get(45));
-		node.get(72).setJumpUp(node.get(53));
-		node.get(77).setJumpUp(node.get(60));
-		node.get(48).setJumpUp(node.get(35));
-		node.get(57).setJumpUp(node.get(42));
-		node.get(37).setJumpUp(node.get(28));
-		node.get(40).setJumpUp(node.get(33));
-		
-		// Jump up onto the platforms
-		
-//		for(Node n : node)
-//			System.out.println(n + ", " + n.getWalkLeft() + ", " + n.getWalkRight()
-//					+ ", " + n.getJumpLeft() + ", " + n.getJumpRight() + ", " + n.getJumpUp()
-//					+ ", " + n.getFallLeft() + ", " + n.getFallRight());
-		
-//		System.out.println(node.get(38).getX() + " " + node.get(39).getX());
-		
-		bbg.bub.setCurrentLocation(new Vector(node.get(15).getX(), node.get(15).getY()));
-		bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(65).getX(), node.get(65).getY()));
-		bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
-		bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
-		bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
-		bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
-		bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
-//		for(int i = 0; i < 2; i++)
-//			bbg.enemy.get(i).setVelocity(new Vector(0.15f, 0));
+		else if(level == 2)
+		{
+			// Add enemies into the map
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 80), 0));
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 80), 1));
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+120, 2));
+//			bbg.enemy.get(0).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+120, 3));
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+30, 4));
+//			bbg.enemy.get(0).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+30, 5));
+//			bbg.enemy.get(3).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+10, 6));
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+10, 7));
+						
+			Level2blocks(bbg);
+			
+			for(int i = 0; i < node.size(); i++)
+				node.get(i).setRefBlock(bbg.block.get(i));
+			
+			for(Node n : node)
+			{
+				for (Node n2 : node)
+				{
+					if(n != n2)
+					{
+						if((n.getWalkLeft() == null) && (n2.getX() == (n.getX() - 24)) && (n2.getY() == n.getY()))
+							n.setWalkLeft(n2);
+						
+						else if((n.getWalkRight() == null) && (n2.getX() == (n.getX() + 24)) && (n2.getY() == n.getY()))
+							n.setWalkRight(n2);
+					}
+				}
+			}
+			
+			// Jump left and right on the platforms
+			// Bottom platform
+			node.get(74).setJumpLeft(node.get(73));
+			node.get(73).setJumpRight(node.get(74));
+			node.get(92).setJumpLeft(node.get(91));
+			node.get(91).setJumpRight(node.get(92));
+			// Middle platform
+			node.get(52).setJumpLeft(node.get(51));
+			node.get(51).setJumpRight(node.get(52));
+			node.get(70).setJumpLeft(node.get(69));
+			node.get(69).setJumpRight(node.get(70));
+			// Top platform
+			node.get(30).setJumpLeft(node.get(29));
+			node.get(29).setJumpRight(node.get(30));
+			node.get(48).setJumpLeft(node.get(47));
+			node.get(47).setJumpRight(node.get(48));
+			
+			// Fall left onto the platforms
+			node.get(74).setFallLeft(node.get(2));
+			node.get(52).setFallLeft(node.get(73));
+			node.get(30).setFallLeft(node.get(51));
+			node.get(48).setFallLeft(node.get(69));
+			node.get(70).setFallLeft(node.get(91));
+			node.get(92).setFallLeft(node.get(23));
+			
+			// Fall right onto the platforms
+			node.get(73).setFallRight(node.get(5));
+			node.get(51).setFallRight(node.get(74));
+			node.get(29).setFallRight(node.get(52));
+			node.get(47).setFallRight(node.get(70));
+			node.get(69).setFallRight(node.get(92));
+			node.get(91).setFallRight(node.get(26));
+			
+			// Jump up onto platforms
+			// Left side
+			node.get(1).setJumpUp(node.get(73));
+			node.get(72).setJumpUp(node.get(50));
+			node.get(51).setJumpUp(node.get(29));
+			// Right side
+			node.get(26).setJumpUp(node.get(92));
+			node.get(93).setJumpUp(node.get(71));
+			node.get(70).setJumpUp(node.get(48));
+			// Floor to bottom
+			node.get(6).setJumpUp(node.get(75));
+			node.get(14).setJumpUp(node.get(83));
+			node.get(21).setJumpUp(node.get(90));
+			// Bottom to middle
+			node.get(79).setJumpUp(node.get(57));
+			node.get(87).setJumpUp(node.get(65));
+			// Middle to top
+			node.get(53).setJumpUp(node.get(31));
+			node.get(61).setJumpUp(node.get(39));
+			node.get(68).setJumpUp(node.get(46));
+			
+			bbg.bub.setCurrentLocation(new Vector(node.get(15).getX(), node.get(15).getY()));
+			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(65).getX(), node.get(65).getY()));
+			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
+			bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
+			bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
+			bbg.enemy.get(6).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(7).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
+		}
 	}
 
 	@Override
@@ -228,12 +320,12 @@ public class PlayingState extends BasicGameState {
 		
 		bbg.bub.render(g);
 		
-		if (bbg.enemy.isEmpty() && livesRemaining != -1)
-		{
-			g.drawString("You win!", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
-		}
+//		if (bbg.enemy.isEmpty() && livesRemaining != -1)
+//		{
+//			g.drawString("You win!", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
+//		}
 		
-		g.drawString("01", bbg.ScreenWidth/2-8, bbg.ScreenHeight/9);
+		g.drawString("0" + level, bbg.ScreenWidth/2-8, bbg.ScreenHeight/9);
 		
 		if(livesRemaining >= 0)
 			g.drawString("" + livesRemaining, 30, bbg.ScreenHeight-22);
@@ -356,27 +448,88 @@ public class PlayingState extends BasicGameState {
 			g.drawString("Game Paused", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
 		}
 		
-		if(livesRemaining == -1)
-		{
-			g.drawString("Game Lost", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
-		}
+//		if(livesRemaining == -1)
+//		{
+//			g.drawString("Game Lost", bbg.ScreenWidth/2 - 48, bbg.ScreenHeight/2);
+//		}
 	}
 	
-	public int Distance(Vector target, Vector current)
+	public void Level2blocks(StateBasedGame game)
 	{
-		float x1 = target.getX();
-		float y1 = target.getY();
-		float x2 = current.getX();
-		float y2 = current.getY();
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
-		float dx = x1 - x2;
-		float dy = y1 - y2;
+		// Add top blocks (left side of level indicator)
+		for (int i = 1; i < 14; i++)
+		{
+			bbg.block.add(new Blocks(36+i*24, 84, 2, 1));
+		}
 		
-		int distance = Math.round((dx*dx) + (dy*dy));
+		// Add top blocks (right side of level indicator)
+		for (int i = 16; i < 30; i++)
+		{
+			bbg.block.add(new Blocks(36+i*24, 84, 2, 1));
+		}	
 		
-//		System.out.println(distance);
+		// Add floor blocks
+		for (int i = 3; i < 33; i++)
+		{
+			Vector v = new Vector((i*24-12),(bbg.ScreenHeight-12));
+			bbg.block.add(new Blocks(v.getX(), v.getY(), 2, 1));
+			
+			if(i < 31)
+				node.add(new Node(null, v.getX(), v.getY(), null, null, null, null, null, null, null));
+		}		
 		
-		return distance;
+		// Add top platform
+		for (int i = 1; i < 29; i++)
+		{
+			if (i != 3 && i != 4 && i != 5 &&
+				i != 24 && i != 25 && i != 26)
+			{
+				Vector v = new Vector((2*24 + 24*i-12),(84+9*24));
+				bbg.block.add(new Blocks(v.getX(),v.getY(), 2, 1));
+				node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
+			}
+		}
+		
+		// Add middle platform
+		for (int i = 1; i < 29; i++)
+		{
+			if (i != 3 && i != 4 && i != 5 &&
+				i != 24 && i != 25 && i != 26)
+			{
+				Vector v = new Vector((2*24 + 24*i-12),(84+14*24));
+				bbg.block.add(new Blocks(v.getX(),v.getY(), 2, 1));
+				node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
+			}
+		}
+		
+		// Add bottom platform
+		for (int i = 1; i < 29; i++)
+		{
+			if (i != 3 && i != 4 && i != 5 &&
+				i != 24 && i != 25 && i != 26)
+			{
+				Vector v = new Vector((2*24 + 24*i-12),(84+19*24));
+				bbg.block.add(new Blocks(v.getX(),v.getY(), 2, 1));
+				node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
+			}
+		}
+		
+		// Lower left block
+		bbg.block.add(new Blocks(12, bbg.ScreenHeight-12, 2, 1));
+		
+		// Left side blocks
+		for (int i = 2; i < 14; i++)
+		{
+			bbg.block.add(new Blocks(24, 48*i, 2, 4));
+		}	
+		
+		// Right side blocks
+		for (int i = 2; i < 14; i++)
+		{
+			bbg.block.add(new Blocks(bbg.ScreenWidth-24, 48*i, 2, 4));
+		}
 	}
 	
 	public void Level1blocks(StateBasedGame game)
@@ -403,14 +556,6 @@ public class PlayingState extends BasicGameState {
 			
 			if(i < 31)
 				node.add(new Node(null, v.getX(), v.getY(), null, null, null, null, null, null, null));
-				
-			if(i < 31)
-			{
-//				if(i == 3 || i == 30)
-//					mapGrid[23][i-3] = 'Q';
-//				else
-					mapGrid[23][i-3] = 'B';
-			}
 		}	
 		
 		// Add top platform
@@ -419,11 +564,6 @@ public class PlayingState extends BasicGameState {
 			bbg.block.add(new Blocks(24*12 + 24*i+12, 84+4*24, 1, 1));
 			Vector v = new Vector((12*24 + 24*i+12),(84+4*24));
 			node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
-			
-			if(i == 1 || i == 6)
-				mapGrid[3][i+10] = 'Q';
-			else
-				mapGrid[3][i+10] = 'B';
 		}	
 		
 		// Add second to top platform
@@ -434,11 +574,6 @@ public class PlayingState extends BasicGameState {
 				bbg.block.add(new Blocks(9*24 + 24*i+12, 84+9*24, 1, 1));
 				Vector v = new Vector((9*24 + 24*i+12),(84+9*24));
 				node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
-				
-				if(i == 1 || i == 5 || i == 8 || i == 12)
-					mapGrid[8][i+7] = 'Q';
-				else
-					mapGrid[8][i+7] = 'B';
 			}
 		}
 		
@@ -448,11 +583,6 @@ public class PlayingState extends BasicGameState {
 			bbg.block.add(new Blocks(6*24 + 24*i+12, 84+14*24, 1, 1));
 			Vector v = new Vector((6*24 + 24*i+12),(84+14*24));
 			node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
-			
-			if(i == 1 || i == 18)
-				mapGrid[13][i+4] = 'Q';
-			else
-				mapGrid[13][i+4] = 'B';
 		}
 		
 		// Add bottom platform
@@ -463,28 +593,11 @@ public class PlayingState extends BasicGameState {
 				bbg.block.add(new Blocks(3*24 + 24*i+12, 84+19*24, 1, 1));
 				Vector v = new Vector((3*24 + 24*i+12),(84+19*24));
 				node.add(new Node(null, v.getX(),v.getY(), null, null, null, null, null, null, null));
-				
-				if(i == 1 || i == 7 || i == 10 || i == 15 || i == 18 || i == 24)
-					mapGrid[18][i+1] = 'Q';
-				else
-					mapGrid[18][i+1] = 'B';
 			}
 		}
 		
 		// Lower left block
 		bbg.block.add(new Blocks(12, bbg.ScreenHeight-12, 1, 1));
-		
-//		// Add top blocks (left side of level indicator)
-//		for (int i = 1; i < 14; i++)
-//		{
-//			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
-//		}
-//		
-//		// Add top blocks (right side of level indicator)
-//		for (int i = 16; i < 30; i++)
-//		{
-//			bbg.block.add(new Blocks(36+i*24, 84, 1, 1));
-//		}	
 		
 		// Left side blocks
 		for (int i = 2; i < 14; i++)
@@ -1339,111 +1452,154 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
-		levelTimer--;
-		if(bbg.enemy.isEmpty() && !stopTimer)
+		if(bubDied)
 		{
-			stopTimer = true;
-			score *= Math.round(timerDisplay/9);
-		}
-		
-		PlayerCollisionDetection(bbg); // Detect player collisions			
-		EnemyCollisionDetection(bbg); // Detect enemy collisions
-		
-		
-		// Check for Bub touching an enemy and losing a life. A hit timeout of 3 seconds is activated.
-		if(playerHitTimeout == 0)
-		{
-			for(Enemy e : bbg.enemy)
+			deadTimer--;
+			if(deadTimer == 0)
 			{
-				if(e.collides(bbg.bub) != null && !e.getInBubble() && !e.getEnemyDying())
-				{
-//					System.out.println("Gotcha!");
-					livesRemaining--; // KEEP GOING HERE
-					playerHitTimeout = 120;
-					break;
-				}
+				game.enterState(BubbleBobbleGame.GAMEOVERSTATE, new FadeOutTransition(), new FadeInTransition());
+				bubDied = false;
 			}
 		}
 		else
-			playerHitTimeout--;
-		
-		if(timerDisplay == 0)
 		{
-			for (Enemy e : bbg.enemy)
+			if(!pause && !bbg.enemy.isEmpty())
+				levelTimer--;
+			
+			if(bbg.enemy.isEmpty() && !stopTimer)
 			{
-				e.removeAnimation();
-				e.setEnemyAngry(true);
-				if(e.getWalkingLeft())
+				stopTimer = true;
+				
+				if(timerDisplay > 0)
+					score += Math.round(timerDisplay * 13);
+				
+				if(level == 1)
 				{
-					e.AnimateAngryLeft();
-					e.setYVelocity(0.2f);
-					e.setXVelocity(-0.2f);
+					game.enterState(BubbleBobbleGame.LEVEL2STATE, new FadeOutTransition(), new FadeInTransition());
+					
+					bbg.bub.removeAnimation();
+					bbg.bub.removeAnimation(walking);
+					bbg.bub.removeAnimation(blowBubble);
+					level = 2;
+					levelTimer = 1800;
+					livesRemaining = 3;
+					stopTimer = false;
+					
+					// Remove remaining bricks
+					for (Iterator<Blocks> b = bbg.block.iterator(); b.hasNext();)
+					{
+						if(b.next() != null)
+							b.remove();
+					}
 				}
-				else
+				else if(level == 2)
 				{
-					e.AnimateAngryRight();
-					e.setYVelocity(0.2f);
-					e.setXVelocity(0.2f);
+					game.enterState(BubbleBobbleGame.GAMEWONSTATE, new FadeOutTransition(), new FadeInTransition());
 				}
 			}
-		}
-		
-		if(livesRemaining == 0)
-		{
-			// Remove enemies that have died
-			Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
 			
-			while (removeEnemy.hasNext())
+			PlayerCollisionDetection(bbg); // Detect player collisions			
+			EnemyCollisionDetection(bbg); // Detect enemy collisions
+			
+			
+			// Check for Bub touching an enemy and losing a life. A hit timeout of 3 seconds is activated.
+			if(playerHitTimeout == 0)
 			{
-				Enemy e = removeEnemy.next();
-				removeEnemy.remove();
+				for(Enemy e : bbg.enemy)
+				{
+					if(e.collides(bbg.bub) != null && !e.getInBubble() && !e.getEnemyDying())
+					{
+	//					System.out.println("Gotcha!");
+						livesRemaining--; // KEEP GOING HERE
+						playerHitTimeout = 120;
+						break;
+					}
+				}
+			}
+			else
+				playerHitTimeout--;
+			
+			if(timerDisplay == 0)
+			{
+				for (Enemy e : bbg.enemy)
+				{
+					e.removeAnimation();
+					e.setEnemyAngry(true);
+					if(e.getWalkingLeft())
+					{
+						e.AnimateAngryLeft();
+						e.setYVelocity(0.2f);
+						e.setXVelocity(-0.2f);
+					}
+					else
+					{
+						e.AnimateAngryRight();
+						e.setYVelocity(0.2f);
+						e.setXVelocity(0.2f);
+					}
+				}
 			}
 			
-			bbg.bub.removeAnimation();
-//			bbg.bub.removeAnimation(standing);
-			bbg.bub.removeAnimation(walking);
-			
-			bbg.bub.AnimateBubDying();
-			bbg.bub.setBubDead(true);
-//			bbg.bub.removeAnimation();
-			
-			livesRemaining = -1;
-			
-			pause = true;
-		}
-		else
-		{
-			if(input.isKeyPressed(Input.KEY_P))
+			if(livesRemaining == 0)
 			{
+				// Remove enemies that have died
+				Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
+				
+				while (removeEnemy.hasNext())
+				{
+					Enemy e = removeEnemy.next();
+					removeEnemy.remove();
+				}
+				
+				bbg.bub.removeAnimation();
+	//			bbg.bub.removeAnimation(standing);
+				bbg.bub.removeAnimation(walking);
+				
+				bbg.bub.AnimateBubDying();
+				bbg.bub.setBubDead(true);
+	//			bbg.bub.removeAnimation();
+				
+				livesRemaining = -1;
+				
+//				pause = true;
+				
+				bubDied = true;
+				deadTimer = 120;
+			}
+			else
+			{
+				if(input.isKeyPressed(Input.KEY_P))
+				{
+					if(pause)
+						pause = false;
+					else
+						pause = true;
+				}
+				
 				if(pause)
-					pause = false;
-				else
-					pause = true;
+					delta = 0;
+		
+				Attacking(bbg);
+				
+				if(!pause)
+				{
+					Controls(bbg, container); // Check what controls are happening by the player
+					PlayerMovements(bbg); // Checks how the player should be setup based on controls
+					EnemyMovements(bbg); // Checks how the enemies should move
+				}	
+				
+				for (Enemy e : bbg.enemy)
+				{
+					e.update(delta);
+				}
+				
+				for (Bubble b : bbg.bubble)
+				{
+					b.update(delta);
+				}
+				
+				bbg.bub.update(delta); // Update the game state
 			}
-			
-			if(pause)
-				delta = 0;
-	
-			Attacking(bbg);
-			
-			if(!pause)
-			{
-				Controls(bbg, container); // Check what controls are happening by the player
-				PlayerMovements(bbg); // Checks how the player should be setup based on controls
-				EnemyMovements(bbg); // Checks how the enemies should move
-			}	
-			
-			for (Enemy e : bbg.enemy)
-			{
-				e.update(delta);
-			}
-			
-			for (Bubble b : bbg.bubble)
-			{
-				b.update(delta);
-			}
-			
-			bbg.bub.update(delta); // Update the game state
 		}
 		
 	}
