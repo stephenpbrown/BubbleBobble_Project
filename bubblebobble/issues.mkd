@@ -13,7 +13,7 @@
 - **[11]** Add in a scoring system.
 - **[12]** Add in level 2, GameWon, GameOver, and Splash Screen state.
 - **[13]** Bug fix branch: Fix enemy inconsistencies and smooth out state transitions.
-- **[14]** Add in background music and other sound effects.
+- **[14]** Add in background music and sound effects.
 
 ## Open Issues ##
  

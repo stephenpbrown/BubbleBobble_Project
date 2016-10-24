@@ -778,7 +778,7 @@ public class PlayingState extends BasicGameState {
 			if ((input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL)) && onPlatform == true && jumping == false)
 			{
 				StartJump();
-				ResourceManager.getSound(bbg.JUMP).play();;
+				ResourceManager.getSound(bbg.JUMP).play();
 				bbg.bub.removeAnimation(walking);
 				walking = new Animation(ResourceManager.getSpriteSheet(bbg.BUB_JUMPING_LEFT, 45, 40), 
 						0, 0, 1, 0, true, 120, true);
@@ -795,16 +795,16 @@ public class PlayingState extends BasicGameState {
 			
 			if ((input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL)) && onPlatform == true && jumping == false)
 			{
-				ResourceManager.getSound(bbg.JUMP).play();
 				StartJump();
+				ResourceManager.getSound(bbg.JUMP).play();
 			}
 		}
 		
 		// Jumping while idle
 		else if ((input.isKeyPressed(Input.KEY_LCONTROL) || input.isKeyPressed(Input.KEY_RCONTROL)) && onPlatform == true && jumping == false)
 		{
-			ResourceManager.getSound(bbg.JUMP).play();
 			StartJump();
+			ResourceManager.getSound(bbg.JUMP).play();
 		}
 		
 		else if(input.isKeyDown(Input.KEY_DOWN))

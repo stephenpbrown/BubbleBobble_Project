@@ -23,9 +23,9 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final int GAMEWONSTATE = 6;
 	
 	public static final String MAIN_THEME = "resource/Main_Theme.wav";
-	public static final String JUMP = "resource/Sound_Effects/Jump.wav";
-	public static final String BLOW_BUBBLE = "resource/Sound_Effects/Blow_Bubble.wav";
-	public static final String ENEMY_DIES = "resource/Sound_Effects/Enemy_Dies.wav";
+	public static final String JUMP = "resource/Jump.wav";
+	public static final String BLOW_BUBBLE = "resource/Blow_Bubble.wav";
+	public static final String ENEMY_DIES = "resource/Enemy_Dies.wav";
 	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
@@ -94,7 +94,6 @@ public class BubbleBobbleGame extends StateBasedGame
 		ResourceManager.loadSound(JUMP);
 		ResourceManager.loadSound(BLOW_BUBBLE);
 		ResourceManager.loadSound(ENEMY_DIES);
-
 		
 		ResourceManager.loadImage(BUB_STANDING);
 		ResourceManager.loadImage(BUB_STANDING_RIGHT);
