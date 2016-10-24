@@ -11,6 +11,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import jig.ResourceManager;
+import jig.Vector;
 
 public class GameOverState extends BasicGameState
 {
@@ -54,10 +55,20 @@ public class GameOverState extends BasicGameState
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		
+		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		
 		timer -= delta;
 		if (timer <= 0)
 		{
+			// Remove remaining bricks
+			for (Iterator<Blocks> b = bbg.block.iterator(); b.hasNext();)
+			{
+				if(b.next() != null)
+					b.remove();
+			}
+			
+//			bbg.bub.AnimateRight();
+			bbg.bub.setPosition(new Vector(bbg.ScreenWidth/2, 2*bbg.ScreenHeight/3+60));
 			game.enterState(BubbleBobbleGame.SPLASHSCREENSTATE, new FadeOutTransition(), new FadeInTransition() );
 		}
 			

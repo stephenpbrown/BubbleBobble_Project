@@ -53,7 +53,7 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final String LEVEL_1_RSC = "resource/Level_1.png";
 	public static final String LEVEL_2_RSC = "resource/Level_2.png";
 	public static final String GO_RSC = "resource/Go.png";
-	public static final String SPLASH_SCREEN_RSC = "resource/SplashScreen.png";
+	public static final String SPLASH_SCREEN_RSC = "resource/SplashScreen2.png";
 	public static final String GAMEWON_RSC = "resource/GameWon.png";
 	public static final String GAMEOVER_BANNER_RSC = "resource/Gameover2.png";
 	

@@ -56,13 +56,24 @@ public class Level1State extends BasicGameState
 		timer -= delta;
 		if (timer <= 0)
 		{
-//			bg.paddle.setPosition(bg.ScreenWidth/2, bg.ScreenHeight-16);
-////			bg.paddles.get(0).setPosition(16, bg.ScreenHeight-110);
-////			bg.paddles.get(1).setPosition(bg.ScreenWidth-16, bg.ScreenHeight-110);
-//			bg.ball.setPosition(bg.ScreenWidth / 4, bg.ScreenHeight / 2);
-//			bg.ball.setVelocity(new Vector(.09f, .19f));
-//			bg.ball.removeBrokenBall();
-			game.enterState(BubbleBobbleGame.GOSTATE, new FadeOutTransition(), new FadeInTransition());
+			// Remove remaining bricks
+			for (Iterator<Blocks> b = bbg.block.iterator(); b.hasNext();)
+			{
+				if(b.next() != null)
+					b.remove();
+			}
+			
+			// Remove enemies that have died
+			Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
+			
+			while (removeEnemy.hasNext())
+			{
+				Enemy e = removeEnemy.next();
+				removeEnemy.remove();
+			}
+			
+			bbg.bub.setPosition(new Vector(bbg.ScreenWidth/2, 2*bbg.ScreenHeight/3+60));
+			game.enterState(BubbleBobbleGame.PLAYINGSTATE, new FadeOutTransition(), new FadeInTransition());
 		}
 
 	}
