@@ -13,13 +13,13 @@
 - **[11]** Add in a scoring system.
 - **[12]** Add in level 2, GameWon, GameOver, and Splash Screen state.
 - **[13]** Bug fix branch: Fix enemy inconsistencies and smooth out state transitions.
+- **[14]** Add in background music and other sound effects.
 
 ## Open Issues ##
  
 *Low-Bar Issues*
 
 *High-Bar Issues*
-- **[14]** Add in background music.
 - **[15]** Add items that give extra points when collected.
 - **[16]** Add intelligent pathfinding for enemies.
 - **[17]** Add special element bubbles that attack enemies with fire, lightning or water when popped.

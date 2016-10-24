@@ -21,12 +21,12 @@ public class SplashScreenState extends BasicGameState
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		ResourceManager.getSound(BubbleBobbleGame.MAIN_THEME).loop();
 	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		timer = 1500;
-		ResourceManager.getSound(BubbleBobbleGame.MAIN_THEME).loop();
 	}
 
 	public void setUserScore(int bounces) {
