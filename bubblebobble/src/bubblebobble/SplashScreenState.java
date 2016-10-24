@@ -26,7 +26,7 @@ public class SplashScreenState extends BasicGameState
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		timer = 1500;
-//		ResourceManager.getSound(BubbleBobbleGame.STARTUP_SONG_RSC).loop();
+		ResourceManager.getSound(BubbleBobbleGame.MAIN_THEME).loop();
 	}
 
 	public void setUserScore(int bounces) {

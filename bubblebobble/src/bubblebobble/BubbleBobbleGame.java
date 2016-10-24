@@ -22,6 +22,8 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final int GAMEOVERSTATE = 5;
 	public static final int GAMEWONSTATE = 6;
 	
+	public static final String MAIN_THEME = "resource/Main_Theme.wav";	
+	
 	// Sprites
 	public static final String BUB_STANDING = "resource/Bub_Standing.png";
 	public static final String BUB_STANDING_LEFT = "resource/Bub_Standing_Left.png";
@@ -84,6 +86,8 @@ public class BubbleBobbleGame extends StateBasedGame
 		addState(new GoState());
 		addState(new GameWonState());
 		addState(new GameOverState());
+		
+		ResourceManager.loadSound(MAIN_THEME);
 		
 		ResourceManager.loadImage(BUB_STANDING);
 		ResourceManager.loadImage(BUB_STANDING_RIGHT);
