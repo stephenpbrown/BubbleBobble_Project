@@ -122,15 +122,23 @@ public class PlayingState extends BasicGameState {
 		if(level == 1)
 		{
 			// Add enemies into the map
-			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+61, 0));
-			bbg.enemy.get(0).setWalkingLeft(true);
-			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+61, 1));
-			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 60), 2));
-			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 60), 3));
-			bbg.enemy.get(3).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (2*bbg.ScreenHeight / 3)+20, 0));
+//			bbg.enemy.get(0).removeAnimation();
+//			bbg.enemy.get(0).AnimateRight();
+//			bbg.enemy.get(0).setWalkingLeft(true);
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (2*bbg.ScreenHeight / 3)+20, 1));
+			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4) - 36, (bbg.ScreenHeight - 80), 2));
+			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4) + 36, (bbg.ScreenHeight - 80), 3));
+//			bbg.enemy.get(3).setWalkingLeft(true);
 			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+100, 4));
 //			bbg.enemy.get(4).setVelocity(new Vector(0, 0.15f));
 			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+100, 5));
+			
+			for (Enemy e : bbg.enemy)
+			{
+				e.setOnPlatform(false);
+				e.setVelocity(new Vector(0, 0.1f));
+			}
 			
 			Level1blocks(bbg);
 			
@@ -189,13 +197,15 @@ public class PlayingState extends BasicGameState {
 			node.get(37).setJumpUp(node.get(28));
 			node.get(40).setJumpUp(node.get(33));
 			
-			bbg.bub.setCurrentLocation(new Vector(node.get(15).getX(), node.get(15).getY()));
-			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(65).getX(), node.get(65).getY()));
-			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
+			bbg.bub.setCurrentLocation(new Vector(node.get(53).getX(), node.get(53).getY()));
+			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
 			bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
-			bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
-			bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
-			bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
+			bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			
+			bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(54).getX(), node.get(54).getY()));
+//			bbg.enemy.get(4).setVelocity(new Vector(-0.1f, 0));
+			bbg.enemy.get(5).setCurrentLocation(new Vector(node.get(54).getX(), node.get(54).getY()));
 		}
 		else if(level == 2)
 		{
@@ -212,6 +222,11 @@ public class PlayingState extends BasicGameState {
 			bbg.enemy.add(new Enemy((bbg.ScreenWidth / 4)-12, (bbg.ScreenHeight / 3)+10, 6));
 			bbg.enemy.add(new Enemy((3*bbg.ScreenWidth / 4)+12, (bbg.ScreenHeight / 3)+10, 7));
 						
+			for (Enemy e : bbg.enemy)
+			{
+				e.setOnPlatform(false);
+			}
+			
 			Level2blocks(bbg);
 			
 			for(int i = 0; i < node.size(); i++)
@@ -287,8 +302,8 @@ public class PlayingState extends BasicGameState {
 			node.get(68).setJumpUp(node.get(46));
 			
 			bbg.bub.setCurrentLocation(new Vector(node.get(15).getX(), node.get(15).getY()));
-			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(65).getX(), node.get(65).getY()));
-			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(78).getX(), node.get(78).getY()));
+			bbg.enemy.get(0).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
+			bbg.enemy.get(1).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
 			bbg.enemy.get(2).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
 			bbg.enemy.get(3).setCurrentLocation(new Vector(node.get(59).getX(), node.get(59).getY()));
 			bbg.enemy.get(4).setCurrentLocation(new Vector(node.get(46).getX(), node.get(46).getY()));
@@ -369,12 +384,12 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 				
-//				if(e.getID() == 1)
-//					playerNode += 6;
-//				else if(e.getID() == 2)
-//					playerNode += 15;
-//				else if(e.getID() == 3)
-//					playerNode -= 3;
+				if(e.getID() == 1)
+					playerNode += 6;
+				else if(e.getID() == 3)
+					playerNode += 15;
+				else if(e.getID() == 4)
+					playerNode -= 3;
 				
 				createPath = new FindPath(node, enemyX, enemyY, playerX, playerY);
 	//			createPath = new FindPath(node, bbg.enemy.get(0).getCurrentLocation().getX(), bbg.enemy.get(0).getCurrentLocation().getY(), node.get(32).getX(), node.get(32).getY());
@@ -1002,9 +1017,6 @@ public class PlayingState extends BasicGameState {
 			e.setYVelocity(-0.2f);
 			e.setOnPlatform(false);
 			e.setJumping(true);
-//			enemyVelocityY = -0.2f;
-//			enemyOnPlatform = false;
-//			enemyJumping = true;
 		}
 	}
 	
@@ -1051,8 +1063,20 @@ public class PlayingState extends BasicGameState {
 				
 				e.setVelocity(new Vector(e.getXVelocity(), e.getYVelocity()));
 				
-				if(e.getOnPlatform() && !instructions.isEmpty() && !e.getJumping() && !e.getFalling())
+				if(e.getOnPlatform()&& !e.getJumping() && !e.getFalling() && !e.getInstructions().isEmpty())
 				{	
+					
+//					if(!instructions.isEmpty())
+//					{
+//						e.setPreviousInstructions(instructions);
+//						e.setPreviousPath(path);
+//					}
+//					else
+//					{
+//						path = e.getPreviousPath();
+//						instructions = e.getPreviousInstructions();
+//					}
+					
 		//			e.setVelocity(new Vector(enemyVelocityX, enemyVelocityY));
 					
 					for(int i = instructions.size()-1; i >= 0; i--)
@@ -1145,6 +1169,7 @@ public class PlayingState extends BasicGameState {
 	//						enemyVelocityY = -0.15f;
 							
 							e.setOnPlatform(false);
+//							e.setJumping(true);
 	//						enemyOnPlatform = false;
 		//						enemyJumping = true;
 						}
@@ -1156,8 +1181,7 @@ public class PlayingState extends BasicGameState {
 							
 							e.setOnPlatform(false);
 							e.setFalling(true);
-	//						enemyOnPlatform = false;
-	//						enemyFalling = true;
+//							e.setYVelocity(0.15f);
 						}
 						else if(instructions.get(i) == "FR"
 								&& e.getCurrentLocation().getX() >= path.get(i+1).getX()+5
@@ -1167,21 +1191,74 @@ public class PlayingState extends BasicGameState {
 							
 							e.setOnPlatform(false);
 							e.setFalling(true);
-	//						enemyOnPlatform = false;
-	//						enemyFalling = true;
+//							e.setYVelocity(0.15f);
 						}
 					}
 				}
 				else if(instructions.isEmpty() && !e.getJumping())
 				{
-		//			StartEnemyJump();
 					e.setYVelocity(0.15f);
 					e.setFalling(true);
-	//				enemyVelocityY = 0.15f;
-	//				enemyFalling = true;
-		//			enemyVelocityX = 0.05f;
-		////			bbg.enemy.get(0).setVelocity(new Vector(0, 0.15f));
 				}
+//				else if(instructions.isEmpty() && e.getOnPlatform())
+//				{
+					//			StartEnemyJump();
+//					e.setYVelocity(0.15f);
+					
+//					if(e.getOnPlatform())
+//					{
+//						if(!e.getWalkingLeft())
+//						{
+//							if(e.getEnemyAngry())
+//							{
+//								if(e.getWalkingLeft())
+//								{
+//									e.removeAnimation();
+//									e.AnimateAngryRight();
+//								}
+//								e.setXVelocity(0.2f);
+//							}
+//							else
+//							{
+//								if(e.getWalkingLeft())
+//								{
+//									e.removeAnimation();
+//									e.AnimateRight();
+//								}
+//								e.setXVelocity(0.1f);
+//							}
+//							e.setWalkingLeft(false);
+//							e.setYVelocity(0);
+//							e.setPosition(e.getX(), e.getBottomToMiddle()+1);
+//						}
+//						else
+//						{
+//							if(e.getEnemyAngry())
+//							{
+//								if(!e.getWalkingLeft())
+//								{
+//									e.removeAnimation();
+//									e.AnimateAngryLeft();
+//								}
+//								e.setXVelocity(-0.2f);
+//							}
+//							else
+//							{
+//								if(!e.getWalkingLeft())
+//								{
+//									e.removeAnimation();
+//									e.AnimateLeft();
+//								}
+//								e.setXVelocity(-0.1f);
+//							}
+//							e.setWalkingLeft(true);
+//							e.setYVelocity(0);
+//							e.setPosition(e.getX(), e.getBottomToMiddle()+1);
+//						}
+//					}
+////					e.setXVelocity(0.15f);
+////					e.setFalling(false);
+//				}
 			}
 		}
 	}
@@ -1195,7 +1272,7 @@ public class PlayingState extends BasicGameState {
 			for (Enemy e : bbg.enemy)
 			{	
 				if (e.collides(b) != null && !e.getInBubble() && e.getCoarseGrainedMaxY() > 100)
-				{						
+				{				
 					// Collision detection
 					if (e.getCoarseGrainedMaxY() < b.getCoarseGrainedMinY()+5
 						)//&& jumping == false)
@@ -1204,10 +1281,9 @@ public class PlayingState extends BasicGameState {
 						e.setPosition(e.getX(), bottomToMiddle+1);
 						
 						e.setBottomToMiddle(bottomToMiddle);
-						e.setOnPlatform(true);
 						e.setJumping(false);
 						e.setFalling(false);
-						
+						e.setOnPlatform(true);
 						
 						e.getCollidingWithBlocks().add(b);
 						
@@ -1224,17 +1300,20 @@ public class PlayingState extends BasicGameState {
 					}
 					else if (e.getCoarseGrainedMinX() < 48)
 					{
+						e.removeAnimation();
 						e.setPosition(68, e.getY());
 //						e.setCurrentLocation(new Vector(node.get(0).getX(), node.get(0).getY()));
 //						e.setVelocity(new Vector(0.15f, 0));
 						if(!e.getEnemyAngry())
 						{
+							e.AnimateRight();
 							if(e.getOnPlatform())
 								e.setXVelocity(0.1f);
 							e.setYVelocity(0.15f);
 						}
 						else
 						{
+							e.AnimateAngryRight();
 							if(e.getOnPlatform())
 								e.setXVelocity(0.2f);
 							e.setYVelocity(0.2f);
@@ -1244,16 +1323,19 @@ public class PlayingState extends BasicGameState {
 					}
 					else if (e.getCoarseGrainedMaxX() > bbg.ScreenWidth - 48)
 					{
+						e.removeAnimation();
 						e.setPosition(bbg.ScreenWidth - 68, e.getY());
 //						e.setCurrentLocation(b.getPosition());
 						if(!e.getEnemyAngry())
 						{
+							e.AnimateLeft();
 							if(e.getOnPlatform())
 								e.setXVelocity(-0.1f);
 							e.setYVelocity(0.15f);
 						}
 						else
 						{
+							e.AnimateAngryLeft();
 							if(e.getOnPlatform())
 								e.setXVelocity(-0.2f);
 							e.setYVelocity(0.2f);
@@ -1264,7 +1346,7 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 //				else
-//					enemyOnPlatform = false;
+//					e.setOnPlatform(false);
 			}
 		}
 		
@@ -1459,6 +1541,11 @@ public class PlayingState extends BasicGameState {
 			{
 				game.enterState(BubbleBobbleGame.GAMEOVERSTATE, new FadeOutTransition(), new FadeInTransition());
 				bubDied = false;
+				score = 0;
+				livesRemaining = 3;
+				level = 1;
+				levelTimer = 1800;
+				stopTimer = false;
 			}
 		}
 		else
@@ -1477,24 +1564,19 @@ public class PlayingState extends BasicGameState {
 				{
 					game.enterState(BubbleBobbleGame.LEVEL2STATE, new FadeOutTransition(), new FadeInTransition());
 					
-					bbg.bub.removeAnimation();
-					bbg.bub.removeAnimation(walking);
-					bbg.bub.removeAnimation(blowBubble);
 					level = 2;
 					levelTimer = 1800;
 					livesRemaining = 3;
 					stopTimer = false;
-					
-					// Remove remaining bricks
-					for (Iterator<Blocks> b = bbg.block.iterator(); b.hasNext();)
-					{
-						if(b.next() != null)
-							b.remove();
-					}
 				}
 				else if(level == 2)
 				{
 					game.enterState(BubbleBobbleGame.GAMEWONSTATE, new FadeOutTransition(), new FadeInTransition());
+					level = 1;
+					levelTimer = 1800;
+					livesRemaining = 3;
+					stopTimer = false;
+					score = 0;
 				}
 			}
 			
@@ -1561,7 +1643,8 @@ public class PlayingState extends BasicGameState {
 				
 				livesRemaining = -1;
 				
-//				pause = true;
+				score = 0;
+				level = 1;
 				
 				bubDied = true;
 				deadTimer = 120;

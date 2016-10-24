@@ -37,7 +37,7 @@ public class SplashScreenState extends BasicGameState
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 
-		g.drawImage(ResourceManager.getImage(BubbleBobbleGame.SPLASH_SCREEN_RSC), 185, 210);
+		g.drawImage(ResourceManager.getImage(BubbleBobbleGame.SPLASH_SCREEN_RSC), 260, 210);
 
 	}
 

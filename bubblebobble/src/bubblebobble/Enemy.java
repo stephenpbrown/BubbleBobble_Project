@@ -26,7 +26,9 @@ public class Enemy extends Entity {
 	private float yVelocity;
 	private float bottomToMiddle;
 	private List<String> instructions;
+	private List<String> previousInstructions;
 	private List<Node> path;
+	private List<Node> previousPath;
 	private List<Blocks> collidingWithBlocks;
 	private Blocks lastBlock;
 	private int ID;
@@ -43,7 +45,9 @@ public class Enemy extends Entity {
 		jumping = false;
 		falling = false;
 		instructions = new ArrayList<String>();
+		previousInstructions = new ArrayList<String>();
 		path = new ArrayList<Node>();
+		previousPath = new ArrayList<Node>();
 		collidingWithBlocks = new ArrayList<Blocks>();
 		this.ID = ID;
 	 }
@@ -225,6 +229,16 @@ public class Enemy extends Entity {
 		return this.instructions;
 	}
 	
+	public void setPreviousInstructions(List<String> previousInstructions)
+	{
+		this.previousInstructions = previousInstructions;
+	}
+	
+	public List<String> getPreviousInstructions()
+	{
+		return this.previousInstructions;
+	}
+	
 	public void setCollidingWithBlocks(List<Blocks> collidingWithBlocks)
 	{
 		this.collidingWithBlocks = collidingWithBlocks;
@@ -243,6 +257,16 @@ public class Enemy extends Entity {
 	public List<Node> getPath()
 	{
 		return this.path;
+	}
+	
+	public void setPreviousPath(List<Node> previousPath)
+	{
+		this.previousPath = previousPath;
+	}
+	
+	public List<Node> getPreviousPath()
+	{
+		return this.previousPath;
 	}
 	
 	public void setXVelocity(float xVelocity)
