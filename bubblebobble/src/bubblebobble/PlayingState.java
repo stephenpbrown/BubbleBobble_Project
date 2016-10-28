@@ -1632,7 +1632,7 @@ public class PlayingState extends BasicGameState {
 				}
 				
 				bbg.bub.removeAnimation();
-	//			bbg.bub.removeAnimation(standing);
+				bbg.bub.removeAnimation(blowBubble);
 				bbg.bub.removeAnimation(walking);
 				
 				bbg.bub.AnimateBubDying();
