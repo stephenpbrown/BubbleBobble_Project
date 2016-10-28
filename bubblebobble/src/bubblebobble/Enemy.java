@@ -22,6 +22,7 @@ public class Enemy extends Entity {
 	private boolean removeEnemy;
 	private boolean enemyAngry;
 	private boolean walkingLeft;
+	private boolean jumpUp;
 	private float xVelocity;
 	private float yVelocity;
 	private float bottomToMiddle;
@@ -287,6 +288,16 @@ public class Enemy extends Entity {
 	public float getYVelocity()
 	{
 		return this.yVelocity;
+	}
+	
+	public void setJumpUp(boolean jumpUp)
+	{
+		this.jumpUp = jumpUp;
+	}
+	
+	public boolean getJumpUp()
+	{
+		return this.jumpUp;
 	}
 	
 	public void setBottomToMiddle(float bottomToMiddle)

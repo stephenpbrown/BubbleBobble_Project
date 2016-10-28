@@ -64,13 +64,21 @@ public class Level1State extends BasicGameState
 			}
 			
 			// Remove enemies that have died
-			Iterator<Enemy> removeEnemy = bbg.enemy.iterator();
-			
-			while (removeEnemy.hasNext())
+			for (Iterator<Enemy> removeEnemy = bbg.enemy.iterator(); removeEnemy.hasNext();)
 			{
 				Enemy e = removeEnemy.next();
 				removeEnemy.remove();
 			}
+			
+			// Remove enemies that have died
+			for (Iterator<Bubble> removeBubbles = bbg.bubble.iterator(); removeBubbles.hasNext();)
+			{
+				Bubble b = removeBubbles.next();
+				removeBubbles.remove();
+			}
+			
+			PlayingState ps = new PlayingState();
+			ps.setTransitioning(false);
 			
 			bbg.bub.setPosition(new Vector(bbg.ScreenWidth/2, 2*bbg.ScreenHeight/3+60));
 			game.enterState(BubbleBobbleGame.PLAYINGSTATE, new FadeOutTransition(), new FadeInTransition());

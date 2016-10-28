@@ -93,6 +93,20 @@ public class GameWonState extends BasicGameState
 					b.remove();
 			}
 			
+			// Remove enemies that have died
+			for (Iterator<Enemy> removeEnemy = bbg.enemy.iterator(); removeEnemy.hasNext();)
+			{
+				Enemy e = removeEnemy.next();
+				removeEnemy.remove();
+			}
+			
+			// Remove enemies that have died
+			for (Iterator<Bubble> removeBubbles = bbg.bubble.iterator(); removeBubbles.hasNext();)
+			{
+				Bubble b = removeBubbles.next();
+				removeBubbles.remove();
+			}
+			
 //			bbg.bub.AnimateRight();
 			bbg.bub.setPosition(new Vector(bbg.ScreenWidth/2, 2*bbg.ScreenHeight/3+60));
 			game.enterState(BubbleBobbleGame.SPLASHSCREENSTATE, new FadeOutTransition(), new FadeInTransition() );

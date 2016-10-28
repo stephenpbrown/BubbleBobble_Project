@@ -18,9 +18,8 @@ public class BubbleBobbleGame extends StateBasedGame
 	public static final int PLAYINGSTATE = 1;
 	public static final int LEVEL1STATE = 2;
 	public static final int LEVEL2STATE = 3;
-	public static final int GOSTATE = 4;
-	public static final int GAMEOVERSTATE = 5;
-	public static final int GAMEWONSTATE = 6;
+	public static final int GAMEOVERSTATE = 4;
+	public static final int GAMEWONSTATE = 5;
 	
 	public static final String MAIN_THEME = "resource/Main_Theme.wav";
 	public static final String JUMP = "resource/Jump.wav";
@@ -86,7 +85,6 @@ public class BubbleBobbleGame extends StateBasedGame
 		addState(new PlayingState());
 		addState(new Level1State());
 		addState(new Level2State());
-		addState(new GoState());
 		addState(new GameWonState());
 		addState(new GameOverState());
 		

@@ -117,6 +117,20 @@ public class FindPath
 				
 				Search(n.getWalkRight(), player);
 			}
+			if(n.getWalkLeft() != null && n.getWalkLeft().getParent() == null && enemyX > playerX)
+			{
+				n.getWalkLeft().setParent(n);
+				
+				Search(n.getWalkLeft(), player);
+			}
+
+			if(n.getJumpLeft() != null && n.getJumpLeft().getParent() == null && playerX < enemyX && playerY == enemyY) //n.getX())
+			{
+	//			System.out.println("Searching JL");
+				n.getJumpLeft().setParent(n);
+				
+				Search(n.getJumpLeft(), player);
+			}
 			if(n.getJumpRight() != null && n.getJumpRight().getParent() == null && playerX >= enemyX && playerY == enemyY) //n.getX())
 			{
 	//			System.out.println("Searching JR");
@@ -139,20 +153,6 @@ public class FindPath
 				
 				Search(n.getFallLeft(), player);
 			}
-			if(n.getWalkLeft() != null && n.getWalkLeft().getParent() == null && enemyX > playerX)
-			{
-				n.getWalkLeft().setParent(n);
-				
-				Search(n.getWalkLeft(), player);
-			}
-			if(n.getJumpLeft() != null && n.getJumpLeft().getParent() == null && playerX < enemyX && playerY == enemyY) //n.getX())
-			{
-	//			System.out.println("Searching JL");
-				n.getJumpLeft().setParent(n);
-				
-				Search(n.getJumpLeft(), player);
-			}
-//			}
 			if(n.getJumpUp() != null && n.getJumpUp().getParent() == null && playerY <= enemyY)
 			{
 	//			System.out.println("Searching JU");
@@ -160,6 +160,7 @@ public class FindPath
 	
 				Search(n.getJumpUp(), player);
 			}
+//			}
 		}
 	}
 	
