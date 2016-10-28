@@ -1,0 +1,12 @@
+Author: Steve Brown
+Date: 10/28/2016
+School: Washington State University, Vancouver
+Class: CS 447 Computer Game Design
+
+This game makes use of copyrighted material by Taito. It is not to be distributed for
+any financial means or otherwise and is strictly for learning purposes only. 
+
+Sprites obtained from: https://www.spriters-resource.com/arcade/bublbobl/sheet/14077/
+Blocks obtained from: https://www.spriters-resource.com/nes/bublbobl/sheet/70238/
+Music obtained from: https://www.youtube.com/watch?v=n5tGhY5t5yI
+Sound effects obtained from: https://www.sounds-resource.com/nes/bubblebobble/sound/3719/
