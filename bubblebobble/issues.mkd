@@ -1,0 +1,27 @@
+## Resolved Issues ##
+
+- **[1]** Need a skeletal, executable game.
+- **[2]** Render main character Bub.
+- **[3]** Use fully specified resource path, preload resources and add PlayingState.
+- **[4]** Render level 1 map.
+- **[5]** Add in vertical and horizontal movement for Bub (including jumping with gravity and map collision).
+- **[6]** Render in enemies and add reasonable pathfinding for them.
+- **[7]** Add in collision detection between the main character and enemies and reduce lives remaining counter.
+- **[8]** Allow the main character to attack enemies and destroy them with bubbles and allow enemies to hurt Bub.
+- **[9]** Add in enemy state-based changes.
+- **[10]** Add in level timer (player needs to finish level before the time ends).
+- **[11]** Add in a scoring system.
+- **[12]** Add in level 2, GameWon, GameOver, and Splash Screen state.
+- **[13]** Bug fix branch: Fix enemy inconsistencies and smooth out state transitions.
+- **[14]** Add in background music and sound effects.
+- **[15]** Bug fix branch: Fix some animation defects and some issues with the enemies.
+
+## Open Issues ##
+ 
+*Low-Bar Issues*
+
+*High-Bar Issues*
+- **[16]** Add items that give extra points when collected.
+- **[17]** Add intelligent pathfinding for enemies.
+- **[18]** Add special element bubbles that attack enemies with fire, lightning or water when popped.
+- **[19]** Add in player state-based changes (power ups and special abilities).
