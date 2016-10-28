@@ -48,7 +48,7 @@ public class SplashScreenState extends BasicGameState
 		BubbleBobbleGame bbg = (BubbleBobbleGame)game;
 		Input input = container.getInput();
 		
-		if(input.isKeyPressed(Input.KEY_SPACE))
+		if(input.isKeyDown(Input.KEY_SPACE))
 		{
 			game.enterState(BubbleBobbleGame.LEVEL1STATE, new FadeOutTransition(), new FadeInTransition());
 		}

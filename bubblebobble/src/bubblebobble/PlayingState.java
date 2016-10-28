@@ -1300,14 +1300,14 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 		
-		// Make sure the enemy in bubble doesn't go too high
-		for (Enemy e : bbg.enemy)
-		{
-			if(e.getInBubble() && e.getX() < 0)
-			{
-				e.setVelocity(new Vector(0, 0));
-			}
-		}
+//		// Make sure the enemy in bubble doesn't go too high
+//		for (Enemy e : bbg.enemy)
+//		{
+//			if(e.getInBubble() && e.getX() < 0)
+//			{
+//				e.setVelocity(new Vector(0, 0));
+//			}
+//		}
 		
 		for (Enemy e : bbg.enemy)
 		{
@@ -1422,14 +1422,14 @@ public class PlayingState extends BasicGameState {
 				removeBubble.remove();
 		}
 		
-		// Make sure the enemy in bubble doesn't go too high
-		for (Enemy e : bbg.enemy)
-		{
-			if(e.getInBubble() && e.getX() <= 100)
-			{
-				e.setVelocity(new Vector(0, 0.15f));
-			}
-		}
+//		// Make sure the enemy in bubble doesn't go too high
+//		for (Enemy e : bbg.enemy)
+//		{
+//			if(e.getInBubble() && e.getX() <= 100)
+//			{
+//				e.setVelocity(new Vector(0, 0.15f));
+//			}
+//		}
 		
 		// After 4 seconds, the enemy breaks out of the bubble and goes back to normal
 		for (Enemy e : bbg.enemy)
